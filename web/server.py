@@ -5,7 +5,7 @@ import os
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.cookies import SimpleCookie
-from urllib.parse import urlparse, parse_qs, unquote
+from urllib.parse import urlparse, parse_qs, quote, unquote
 from optparse import OptionParser
 
 import conf
@@ -13,17 +13,21 @@ import view
 import page
 import xurl
 
-def get_redirect_location(i):
+def get_redirect_location(post_data):
+    i = unquote(post_data.decode('utf8'))[2:]
+    x = quote(i)
     if i.startswith('#'):
-        return 'index.html?c=' + i[1:]
+        return 'index.html?c=' + x[1:]
     elif i.startswith('http'):
-        return 'index.html?v=' + i
+        return 'index.html?v=' + x
     elif i.startswith('/') and os.path.isdir(i):
-        return 'list.html?d=' + i
+        return 'list.html?d=' + x
     elif i.startswith('/') and os.path.exists(i):
-        return 'index.html?f=' + i
+        return 'index.html?f=' + x
     else:
-        return 'search.html?q=' + re.sub('\s+', ' ', i)
+        return 'search.html?q=' + x
+    print('FAILED TO GET REDIRECT LOCATION ' + i)
+    return None
 
 def dispatch_request(s, cookies=None):
     if s.startswith('a='):
@@ -49,9 +53,8 @@ class VODServer(BaseHTTPRequestHandler):
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length'))
         post_data = self.rfile.read(content_len)
-        arg = unquote(post_data.decode('utf8'))[2:]
         self.send_response(302)
-        self.send_header('Location', get_redirect_location(arg))
+        self.send_header('Location', get_redirect_location(post_data))
         self.end_headers()
         return
     def do_GET(self):
