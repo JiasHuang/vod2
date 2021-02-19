@@ -8,6 +8,8 @@ mpv, ffplay, or omxplayer (for raspberry pi).
 
 ## bookmark
 Remote URL or local file.
+
+ex:
 https://gist.githubusercontent.com/JiasHuang/30f6cc0f78ee246c1e28bd537764d6c4/raw/bookmark.json
 
 ## Example:
