@@ -64,13 +64,13 @@ def nextLine(playing, playlist):
 
 def getNext(playing, playlist):
 
-    if playlist != xurl.readLocal(xdef.playlist, 0):
+    if playlist != xurl.readLocal(xdef.playlist):
         return None
 
     if isPlayerRunning():
         return None
 
-    playbackMode = xurl.readLocal(xdef.playbackMode, 0).lower()
+    playbackMode = xurl.readLocal(xdef.playbackMode).lower()
 
     if playbackMode == 'loopone':
         return playing
@@ -91,7 +91,7 @@ def playURL_core(url, ref):
     if url == None or url == '':
         return
 
-    xurl.saveLocal(xdef.playing, url, 0)
+    xurl.saveLocal(xdef.playing, url)
 
     if player == 'mpv':
         return mpv.play(url, ref)
@@ -112,17 +112,17 @@ def playURL(url, ref):
 
     if isPlayerRunning():
         if os.path.exists(xdef.playlist):
-            playbackMode = xurl.readLocal(xdef.playbackMode, 0).lower()
+            playbackMode = xurl.readLocal(xdef.playbackMode).lower()
             if len(playbackMode) > 0 and playbackMode != 'normal':
                 os.remove(xdef.playlist)
                 setAct('stop', None)
 
     if xarg.playbackMode:
-        xurl.saveLocal(xdef.playbackMode, xarg.playbackMode, 0)
+        xurl.saveLocal(xdef.playbackMode, xarg.playbackMode)
 
     if xarg.pagelist:
         playlist = xurl.readLocal(xarg.pagelist)
-        xurl.saveLocal(xdef.playlist, playlist, 0)
+        xurl.saveLocal(xdef.playlist, playlist)
         while url != None:
             nextURL = getNext(url, playlist)
             if nextURL:
@@ -159,10 +159,10 @@ def setAct(act, val):
             os.remove(xdef.playlist)
 
     if act == 'playbackMode':
-        xurl.saveLocal(xdef.playbackMode, val, 0)
+        xurl.saveLocal(xdef.playbackMode, val)
         if val.lower() in ['autonext', 'loopall']:
-            playing = xurl.readLocal(xdef.playing, 0)
-            playlist = xurl.readLocal(xdef.playlist, 0)
+            playing = xurl.readLocal(xdef.playing)
+            playlist = xurl.readLocal(xdef.playlist)
             nextURL = nextLine(playing, playlist)
             if nextURL:
                 if os.fork() == 0:

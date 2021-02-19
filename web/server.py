@@ -4,6 +4,7 @@ import re
 import os
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.cookies import SimpleCookie
 from urllib.parse import urlparse, parse_qs, unquote
 from optparse import OptionParser
 
@@ -24,14 +25,14 @@ def get_redirect_location(i):
     else:
         return 'search.html?q=' + re.sub('\s+', ' ', i)
 
-def dispatch_request(s):
+def dispatch_request(s, cookies=None):
     if s.startswith('a='):
         m = re.search(r'a=([^&]*)&n=(.*)', s)
         return view.entry_act(m.group(1), m.group(2))
     if s.startswith('c='):
         return view.entry_cmd(s[2:])
     if s.startswith(('v=', 'f=')):
-        return view.entry_play(s[2:])
+        return view.entry_play(s[2:], cookies)
     if s.startswith('p='):
         return page.entry_page(s[2:])
     if s.startswith('j='):
@@ -61,10 +62,11 @@ class VODServer(BaseHTTPRequestHandler):
             return
         p = urlparse(self.path)
         if p.path in ['/view', '/load']:
+            cookies = SimpleCookie(self.headers.get('Cookie'))
             self.send_response(200)
             self.send_header('Content-type', "text/html")
             self.end_headers()
-            results = dispatch_request(p.query)
+            results = dispatch_request(p.query, cookies)
             self.wfile.write(bytes(results, 'utf8'))
             return
         if p.path.endswith(('.css', '.js', '.html', '.png', '.gif')):

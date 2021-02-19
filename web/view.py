@@ -60,27 +60,11 @@ def sendACT(act, num):
     else:
         subprocess.Popen(cmd, shell=True).communicate()
 
-def getCookie(req, key):
-    cookies = Cookie.get_cookies(req)
-    if cookies and cookies.has_key(key):
-        return cookies[key].value
-    return None
-
-def getOption(req):
-    fmt      = getCookie(req, 'format')
-    subtitle  = getCookie(req, 'subtitle')
-    pagelist = getCookie(req, 'pagelist')
-    dlconf   = getCookie(req, 'dlconf')
+def getOptionByCookies(cookies):
     opt = []
-    if fmt:
-        opt.append('-f \'%s\'' %(fmt))
-    if subtitle:
-        opt.append('--subtitle \'%s\'' %(subtitle))
-    if pagelist:
-        opt.append('--pagelist \'%s\'' %(pagelist))
-    if dlconf:
-        opt.append('--dlconf \'%s\'' %(dlconf))
-
+    for key in ['format', 'subtitle', 'pagelist', 'dlconf']:
+        if key in cookies:
+            opt.append('--%s \'%s\'' %(key, cookies[key].value))
     return ' '.join(opt)
 
 def handleCmd(cmd):
@@ -92,9 +76,12 @@ def handleCmd(cmd):
         return 'error'
     return 'success'
 
-def entry_play(v):
+def entry_play(v, cookies=None):
     obj = play_obj(v)
-    playURL(v)
+    opt = None
+    if cookies:
+        opt = getOptionByCookies(cookies)
+    playURL(v, opt)
     return json.dumps(obj.__dict__)
 
 def entry_act(a, n):

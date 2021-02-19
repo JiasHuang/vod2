@@ -39,15 +39,15 @@ def init(logfile=None):
         path = os.path.join(defvals.workdir, logfile)
         sys.stdout = open(path, 'w+')
 
-def readLocal(local, buffering=-1):
+def readLocal(local):
     if os.path.exists(local):
-        fd = open(local, 'r', buffering)
+        fd = open(local, 'r')
         txt = fd.read()
         fd.close()
         return txt
     return ''
 
-def saveLocal(local, text, buffering=-1):
+def saveLocal(local, text):
     fd = open(local, 'w')
     fd.write(text)
     fd.close()

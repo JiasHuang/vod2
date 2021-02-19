@@ -101,9 +101,6 @@ function highlightPlaybackMode (mode) {
 /* Received JSONs and Cookies from server and then parsed them. */
 function parseJSON(obj) {
   $('#result').html(getResultHTMLText(obj));
-  if (!playbackMode) {
-    initPlaybackMode();
-  }
   window.history.replaceState({}, document.title, "index.html");
 }
 
@@ -126,5 +123,6 @@ function updateResult() {
 function onDocumentReady() {
   showMenuBtn();
   updateResult();
+  initPlaybackMode();
 }
 
