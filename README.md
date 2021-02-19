@@ -1,4 +1,4 @@
-# vod2
+# VOD2
 
 ## USAGE:
 web/server.py -n hostName -p hostPort -P playerName -b bookmark
