@@ -68,6 +68,8 @@ def getPageJSON(url):
     return getExtractorResultJSON(results)
 
 def entry_json(j):
+    if j.startswith(('/', '.', '~')):
+        return xurl.readLocal(j)
     return xurl.load(j)
 
 def entry_page(p):

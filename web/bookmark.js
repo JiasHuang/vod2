@@ -79,8 +79,7 @@ function onTimeout () {
 }
 
 function onDocumentReady() {
-    //loadgist("30f6cc0f78ee246c1e28bd537764d6c4", "bookmark.json");
-    var jsonURL = 'https://gist.githubusercontent.com/JiasHuang/30f6cc0f78ee246c1e28bd537764d6c4/raw/bookmark.json';
+    var jsonURL = '';
 
     var bookmark = localStorage.getItem('bookmark');
     if (bookmark && bookmark.length > 0) {

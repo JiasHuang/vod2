@@ -3,7 +3,7 @@ import re
 import subprocess
 import json
 
-import conf
+import xdef
 import xurl
 
 class play_obj:
@@ -22,71 +22,56 @@ class cmd_obj:
         self.type = 'cmd'
         self.status = status
 
-def search(pattern, txt, flags=0):
-    if not txt:
-        return None
-    m = re.search(pattern, txt, flags)
-    if m:
-        return m.group(1)
-    return None
-
 def runCmd(cmd):
-    if not os.path.exists(conf.vod):
-        return
-    cmd = '%s %s' %(conf.cmd, cmd or '')
+    cmd = '%s %s' %(xdef.cmd, cmd or '')
     print(cmd)
     if os.path.exists('/usr/bin/xterm'):
         subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd])
     else:
         subprocess.Popen(cmd, shell=True).communicate()
 
-def playURL(url, opt=None):
-    if not os.path.exists(conf.vod):
-        return
-    cmd = '%s \'%s\' %s' %(conf.vod, url, opt or '')
+def playURL(player, url, opts=[]):
+    cmd = '%s -p %s %s \'%s\'' %(xdef.vod, player, ' '.join(opts), url)
     print(cmd)
     if os.path.exists('/usr/bin/xterm'):
         subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd])
     else:
         subprocess.Popen(cmd, shell=True)
 
-def sendACT(act, num):
-    if not os.path.exists(conf.act):
-        return
-    cmd = '%s \'%s\' \'%s\'' %(conf.act, act, num)
+def sendACT(player, act, num):
+    cmd = '%s -p %s \'%s\' \'%s\'' %(xdef.act, player, act, num)
     print(cmd)
     if os.path.exists('/usr/bin/xterm'):
         subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd]).communicate()
     else:
         subprocess.Popen(cmd, shell=True).communicate()
 
-def getOptionByCookies(cookies):
-    opt = []
+def getOptionsByCookies(cookies):
+    opts = []
     for key in ['format', 'subtitle', 'pagelist', 'dlconf']:
         if key in cookies:
-            opt.append('--%s \'%s\'' %(key, cookies[key].value))
-    return ' '.join(opt)
+            opts.append('--%s \'%s\'' %(key, cookies[key].value))
+    return opts
 
 def handleCmd(cmd):
     cmd = cmd.lower()
-    if cmd in ['update', 'updatedb']:
-        os.system('rm -f '+conf.workdir+'vod_*')
+    if cmd in ['update']:
         runCmd(cmd)
     else:
         return 'error'
     return 'success'
 
-def entry_play(v, cookies=None):
+def entry_play(player, v, cookies=None):
     obj = play_obj(v)
-    opt = None
+    opts = []
     if cookies:
-        opt = getOptionByCookies(cookies)
-    playURL(v, opt)
+        opts.extend(getOptionsByCookies(cookies))
+    playURL(player, v, opts)
     return json.dumps(obj.__dict__)
 
-def entry_act(a, n):
+def entry_act(player, a, n):
     obj = act_obj(a, n)
-    sendACT(a, n)
+    sendACT(player, a, n)
     return json.dumps(obj.__dict__)
 
 def entry_cmd(c):

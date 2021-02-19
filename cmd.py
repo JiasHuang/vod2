@@ -7,36 +7,10 @@ import sys
 import xdef
 import xurl
 
-def search(patten, txt):
-    m = re.search(patten, txt)
-    if m:
-        return m.group(1)
-    return None
-
-def loadLocal(url):
-    return xurl.load('http://127.0.0.1/vod/'+url)
-
 def update():
-    localdir = '/tmp/vodlatest'
-    if os.path.exists(localdir):
-        os.system('git -C %s pull' %(localdir))
-    else:
-        os.system('git clone http://github.com/jiashuang/vod '+localdir)
-    os.system('sudo %s/install.sh' %(localdir))
-    os.system('sudo %s/sync.sh' %(localdir))
+    os.chdir(xdef.codedir)
+    os.system('git pull')
     return
-
-def updateDataBaseEntry(fd, url, title0):
-    for m in re.finditer(r'<!-- link="([^"]*)" title="([^"]*)" image="([^"]*)" -->', loadLocal(url)):
-        link, title, image = m.group(1), m.group(2), m.group(3)
-        fd.write('<!-- link="%s" title="%s/%s" image="%s" -->\n' %(link, title0, title, image))
-
-def updatedb():
-    local = os.path.expanduser('~')+'/.voddatabase'
-    fd = open(local, 'w')
-    for m in re.finditer(r'<a href=([^>]*)>(.*?)</a>', loadLocal('bookmark.html')):
-        updateDataBaseEntry(fd, m.group(1), m.group(2))
-    fd.close()
 
 def main():
 
@@ -47,8 +21,6 @@ def main():
 
     if cmd == 'update':
         update()
-    elif cmd == 'updatedb':
-        updatedb()
 
     return
 
