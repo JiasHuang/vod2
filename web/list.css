@@ -1,0 +1,20 @@
+
+.slideIndexBox {
+    width: 100%;
+    position: fixed;
+    top: 95%;
+    height: 5%;
+    text-align: center;
+}
+
+.slideIndexBox select {
+    font-size: 32px;
+    border: 2px solid white;
+    width: 120px;
+    text-align-last: center;
+}
+
+.slideIndexBox span {
+    font-size: 32px;
+}
+

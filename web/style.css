@@ -1,0 +1,28 @@
+
+.topright {
+    position: fixed;
+    top: 32px;
+    right: 32px;
+    z-index: 30;
+}
+
+.botright {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 30;
+}
+
+#loadingMessage {
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+
+#loadingMessage h1 {
+    text-align: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin: 0px;
+    font-size: 48px;
+}

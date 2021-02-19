@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="referrer" content="no-referrer" />
+
+<title>VOD</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="menubox.css">
+<link rel="stylesheet" href="search.css">
+<link rel="stylesheet" href="entry.css">
+
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="search.js"></script>
+<script type="text/javascript" src="speech.js"></script>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(onDocumentReady);
+</script>
+
+</head>
+
+<body bgcolor=silver>
+
+    <div id="loadingMessage">
+    <h1>Loading ...<h1>
+    </div>
+
+    <img src="icons/menu-icon.png" onclick="toggleMenu()" class="menuicon" />
+    <div id="menubox" class="menubox" style="display: none" onclick="onMenuClick()"></div>
+
+    <div id="searchbar" class="searchbar">
+        <form action="search.html" method="get" id="xform">
+        <input type="text" id="input_q" name="q" value="" id="xinput" \>
+        <select id="select_engine" name="s" onchange="onSelectChange.call(this)">
+            <option value="youtube">YouTube</option>
+            <option value="long">Long</option>
+            <option value="playlist">Playlist</option>
+            <option value="live">Live</option>
+            <option value="dailymotion">DailyMotion</option>
+            <option value="gdrive">Gdrive</option>
+            <option value="bilibili">Bilibili</option>
+            <option value="iqiyi">Iqiyi</option>
+            <option value="tiktokvideodown">Tiktokvideodown</option>
+            <option value="gimy">Gimy</option>
+        </select>
+        </form>
+    </div>
+
+    <div class="space"></div>
+
+    <div id="result"></div>
+
+    <div id="nextpageResult" class="nextpage"></div>
+
+</body>
+
+</html>

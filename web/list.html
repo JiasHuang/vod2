@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="referrer" content="no-referrer" />
+
+<title>VOD</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="list.css">
+<link rel="stylesheet" href="menubox.css">
+<link rel="stylesheet" href="entry.css">
+
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="list.js"></script>
+<script type="text/javascript" src="speech.js"></script>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="jquery.slider.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(onDocumentReady);
+</script>
+
+</head>
+
+<body bgcolor=silver>
+
+    <div id="loadingMessage">
+    <h1>Loading ...<h1>
+    </div>
+
+    <img src="icons/menu-icon.png" onclick="toggleMenu()" class="menuicon" />
+    <div id="menubox" class="menubox" style="display: none" onclick="onMenuClick()"></div>
+
+    <div id="result" class="result">
+    </div>
+
+    <div id="slideIndexBox" class="slideIndexBox" style="display:none">
+    </div>
+
+</body>
+
+</html>

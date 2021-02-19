@@ -1,0 +1,19 @@
+
+.result table {
+    margin: auto;
+    display: inline;
+    empty-cells: hide;
+}
+
+.result th {
+    background-color: #4682B4;
+}
+
+.result th, td {
+    padding: 32px;
+    text-align: center;
+    font-size: 32px;
+    color: white;
+    border: 2px solid white;
+}
+

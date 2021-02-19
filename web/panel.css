@@ -1,0 +1,68 @@
+
+
+.keypad table {
+    margin: auto;
+    margin-top: 32px;
+    margin-bottom: 8px;
+}
+
+.keypad tr td {
+	vertical-align:middle;
+	text-align:center;
+	border:1px solid #000000;
+	font-size:64px;
+	font-weight:bold;
+	width:160px;
+	height:80px;
+	cursor:pointer;
+	background-color:#666666;
+	color:#ffffff;
+}
+
+.keypad tr td:hover {
+    background-color:#999999;
+    color:#FFFF00;
+}
+
+.keypad button {
+    background-color: Transparent;
+    border: none;
+    outline: none;
+    padding: 0px;
+}
+
+.menu {
+}
+
+.menu input {
+    font-size: 40px;
+    width: 480px;
+    padding: 8px 16px;
+    border: 2px solid black;
+    margin: 8px;
+}
+
+.menu tr td {
+    text-align: center;
+    font-size: 36px;
+    padding: 16px;
+    line-height: 64px;
+}
+
+.menu tr td img {
+    vertical-align: middle;
+}
+
+.btn {
+    font-size: 36px;
+    line-height: 64px;
+    border:2px dashed gray;
+}
+
+.btn_hl {
+    border:2px solid blue;
+}
+
+.result {
+    word-wrap: break-word;
+}
