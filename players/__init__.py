@@ -10,17 +10,16 @@ for f in files:
         __import__('%s.%s' %(__package__, name))
         mods.update({name:globals()[name]})
 
-def isRunning(player):
-    if player in mods:
-        return mods[player].isRunning()
-    return False
-
-def play(player, url, ref, opts):
-    if player in mods:
-        mods[player].play(url, ref, opts)
-    return
-
-def setACT(player, act, val):
-    if player in mods:
-        mods[player].setACT(act, val)
-    return
+class player:
+    def __init__(self, n):
+        if n not in mods:
+            raise ValueError('Invalid Player Name')
+        self.n = n
+    def isRunning(self):
+        return mods[self.n].isRunning()
+    def play(self, url, ref, opts):
+        mods[self.n].play(url, ref, opts)
+        return
+    def setACT(self, act, val):
+        mods[self.n].setACT(act, val)
+        return

@@ -55,7 +55,9 @@ def playURL_core(url, ref, opts):
 
     xurl.saveLocal(xdef.playing, url)
 
-    players.play(opts.player, url, ref, opts)
+    player = players.player(opts.player)
+    player.play(url, ref, opts)
+
     return
 
 def playURL(url, ref, opts):
@@ -64,7 +66,9 @@ def playURL(url, ref, opts):
         src, cookies, ref = xsrc.getSource(url, opts.format, ref)
         url = dl.createJobs(src, xdef.dldir, opts.dl_threads)
 
-    if players.isRunning(opts.player):
+    player = players.player(opts.player)
+
+    if player.isRunning():
         if os.path.exists(xdef.playlist):
             playbackMode = xurl.readLocal(xdef.playbackMode).lower()
             if len(playbackMode) > 0 and playbackMode != 'normal':
@@ -123,8 +127,10 @@ def setAct(act, val, opts):
                     xsrc.getSource(nextURL)
         return
 
-    print('\n[xplay][setAct]\n\n\t'+ '%s,%s,%s' %(opts.player, act, val))
+    player = players.player(opts.player)
 
-    if players.isRunning(opts.player):
-        return players.setACT(opts.player, act, val)
+    print('\n[xplay][setAct]\n\n\t'+ '%s,%s,%s' %(player.n, act, val))
+
+    if player.isRunning():
+        return player.setACT(act, val)
 
