@@ -30,16 +30,16 @@ def runCmd(cmd):
     else:
         subprocess.Popen(cmd, shell=True).communicate()
 
-def playURL(player, url, opts=[]):
-    cmd = '%s -p %s %s \'%s\'' %(xdef.vod, player, ' '.join(opts), url)
+def playURL(url, opts=[]):
+    cmd = '%s %s \'%s\'' %(xdef.vod, ' '.join(opts), url)
     print(cmd)
     if os.path.exists('/usr/bin/xterm'):
         subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd])
     else:
         subprocess.Popen(cmd, shell=True)
 
-def sendACT(player, act, num):
-    cmd = '%s -p %s -a \'%s\' -v \'%s\'' %(xdef.vod, player, act, num)
+def sendACT(act, num, opts):
+    cmd = '%s %s -a \'%s\' -v \'%s\'' %(xdef.vod, ' '.join(opts), act, num)
     print(cmd)
     if os.path.exists('/usr/bin/xterm'):
         subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd]).communicate()
@@ -66,12 +66,17 @@ def entry_play(player, v, cookies=None):
     opts = []
     if cookies:
         opts.extend(getOptionsByCookies(cookies))
-    playURL(player, v, opts)
+    if player:
+        opts.append('-p ' + player)
+    playURL(v, opts)
     return json.dumps(obj.__dict__)
 
 def entry_act(player, a, n):
     obj = act_obj(a, n)
-    sendACT(player, a, n)
+    opts = []
+    if player:
+        opts.append('-p ' + player)
+    sendACT(a, n, opts)
     return json.dumps(obj.__dict__)
 
 def entry_cmd(c):

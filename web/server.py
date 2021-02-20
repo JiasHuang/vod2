@@ -106,7 +106,7 @@ def main():
     parser = OptionParser()
     parser.add_option("-n", "--hostname", dest="hostname", default=xdef.hostname)
     parser.add_option("-p", "--hostport", type="int", dest="port", default=xdef.hostport)
-    parser.add_option("-P", "--player", dest="player", default=xdef.player)
+    parser.add_option("-P", "--player", dest="player")
     parser.add_option("-b", "--bookmark", dest="bookmark", default=xdef.bookmark)
     (opts, args) = parser.parse_args()
 

@@ -21,5 +21,4 @@ vod = codedir + 'vod.py'
 hostname = ''
 hostport = 8080
 bookmark = 'https://gist.githubusercontent.com/JiasHuang/30f6cc0f78ee246c1e28bd537764d6c4/raw/bookmark.json'
-player   = 'mpv'
 
