@@ -28,34 +28,36 @@ def setAct(act, val):
         print('unsupported: %s %s' %(act, val))
         return
 
-    print('\n[omxp][act]\n\n\t%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd))
+    print('\n[omxplayer][act]\n\n\t%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd))
     result = subprocess.check_output('%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd), shell=True)
-    print('\n[omxp][result]\n\n\t%s' %(result))
+    print('\n[omxplayer][result]\n\n\t%s' %(result))
     return
 
-def play(url, ref, cookies=None):
+def play(url, ref, opts, cookies=None):
 
-    xargs = '--user-agent=\'%s\'' %(xurl.defvals.ua)
+    args = '--user-agent=\'%s\'' %(xurl.defvals.ua)
 
-    url, cookies, ref = xsrc.getSource(url, ref=ref)
+    url, cookies, ref = xsrc.getSource(url, opts.format, ref)
 
     if not url:
-        print('\n[omxp][play] invalid url\n')
+        print('\n[omxplayer][play] invalid url\n')
         return
 
     if xproc.checkProcessRunning('omxplayer.bin'):
         setAct('stop', None)
 
     if cookies:
-        xargs = ' '.join([xargs, '--avdict headers:\"Cookie: %s\"' %(cookies)])
+        args = ' '.join([args, '--avdict headers:\"Cookie: %s\"' %(cookies)])
 
     if re.search(r'/hls_playlist/', url):
         cmd = 'livestreamer --player omxplayer --fifo \'hls://%s\' best 2>&1 | tee %s' %(url, xdef.log)
     else:
-        cmd = '%s %s \'%s\' 2>&1 | tee %s' %(xdef.omxp, xargs, url, xdef.log)
+        cmd = '%s %s \'%s\' 2>&1 | tee %s' %(xdef.omxplayer, args, url, xdef.log)
 
     print('\n[omx][cmd]\n\n\t'+cmd+'\n')
     subprocess.Popen(cmd, shell=True).communicate()
 
     return
 
+def isRunning():
+    return xproc.checkProcessRunning('omxplayer.bin')

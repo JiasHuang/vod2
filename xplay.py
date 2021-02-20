@@ -6,53 +6,20 @@ import dl
 
 from multiprocessing import Process
 
-import xarg
 import xdef
 import xproc
 import xurl
-import mpv
-import omxp
-import ffplay
 import xsrc
+import players
 
 def getPlayer():
-
-    if xarg.player != 'def':
-        return xarg.player
-
     if re.search(r'raspberrypi', subprocess.check_output('uname -a', shell=True).decode('utf8')):
-        return 'omxp'
-
+        return 'omxplayer'
     if os.path.exists('/usr/bin/mpv') or os.path.exists('/usr/local/bin/mpv'):
         return 'mpv'
-
     if os.path.exists('/usr/bin/ffplay'):
         return 'ffplay'
-
     return 'err'
-
-def runDBG(url, ref):
-    src, cookies, ref = xsrc.getSource(url, ref=ref)
-    sub = xsrc.getSub(url)
-    if src:
-        print('\n[xplay][DBG][src]\n\n\t%s' %(src))
-    if ref:
-        print('\n[xplay][DBG][ref]\n\n\t%s' %(ref))
-    if cookies:
-        print('\n[xplay][DBG][cookies]\n\n\t%s' %(cookies))
-    if sub:
-        print('\n[xplay][DBG][sub]\n\n\t%s' %(sub))
-    return
-
-def isPlayerRunning():
-    player = getPlayer()
-    if player == 'mpv' and xproc.checkProcessRunning('mpv'):
-        return True
-    if player == 'omxp' and xproc.checkProcessRunning('omxplayer.bin'):
-        return True
-    if player == 'ffplay' and xproc.checkProcessRunning('ffplay'):
-        return True
-    return False
 
 def nextLine(playing, playlist):
     try:
@@ -67,9 +34,6 @@ def getNext(playing, playlist):
     if playlist != xurl.readLocal(xdef.playlist):
         return None
 
-    if isPlayerRunning():
-        return None
-
     playbackMode = xurl.readLocal(xdef.playbackMode).lower()
 
     if playbackMode == 'loopone':
@@ -80,11 +44,9 @@ def getNext(playing, playlist):
 
     return None
 
-def playURL_core(url, ref):
+def playURL_core(url, ref, opts):
 
-    player = getPlayer()
-
-    print('\n[xplay][%s]\n' %(player))
+    print('\n[xplay][%s]\n' %(opts.player))
     print('\turl : %s' %(url or ''))
     print('\tref : %s' %(ref or ''))
 
@@ -93,48 +55,40 @@ def playURL_core(url, ref):
 
     xurl.saveLocal(xdef.playing, url)
 
-    if player == 'mpv':
-        return mpv.play(url, ref)
+    players.play(opts.player, url, ref, opts)
+    return
 
-    if player == 'omxp':
-        return omxp.play(url, ref)
+def playURL(url, ref, opts):
 
-    if player == 'ffplay':
-        return ffplay.play(url, ref)
+    if opts.dl_threads:
+        src, cookies, ref = xsrc.getSource(url, opts.format, ref)
+        url = dl.createJobs(src, xdef.dldir, opts.dl_threads)
 
-    return runDBG(url, ref)
-
-def playURL(url, ref):
-
-    if xarg.dl_threads:
-        src, cookies, ref = xsrc.getSource(url, ref=ref)
-        url = dl.createJobs(src, xdef.dldir, xarg.dl_threads)
-
-    if isPlayerRunning():
+    if players.isRunning(opts.player):
         if os.path.exists(xdef.playlist):
             playbackMode = xurl.readLocal(xdef.playbackMode).lower()
             if len(playbackMode) > 0 and playbackMode != 'normal':
                 os.remove(xdef.playlist)
-                setAct('stop', None)
+                setAct('stop', None, opts)
 
-    if xarg.playbackMode:
-        xurl.saveLocal(xdef.playbackMode, xarg.playbackMode)
+    if opts.playbackMode:
+        xurl.saveLocal(xdef.playbackMode, opts.playbackMode)
 
-    if xarg.pagelist:
-        playlist = xurl.readLocal(xarg.pagelist)
+    if opts.pagelist:
+        playlist = xurl.readLocal(opts.pagelist)
         xurl.saveLocal(xdef.playlist, playlist)
         while url != None:
             nextURL = getNext(url, playlist)
             if nextURL:
-                p = Process(target=xsrc.getSource, args=(nextURL,))
+                p = Process(target=xsrc.getSource, args=(opts.format, nextURL,))
                 p.start()
-                playURL_core(url, ref)
+                playURL_core(url, ref, opts)
                 p.join()
             else:
-                playURL_core(url, ref)
+                playURL_core(url, ref, opts)
             url = ref = getNext(url, playlist)
     else:
-        playURL_core(url, ref)
+        playURL_core(url, ref, opts)
 
     return
 
@@ -148,7 +102,7 @@ def checkActVal(act, val):
 
     return True
 
-def setAct(act, val):
+def setAct(act, val, opts):
 
     if checkActVal(act, val) == False:
         print('\n[xplay][setAct] invalid command: %s %s\n' %(act, val))
@@ -169,15 +123,8 @@ def setAct(act, val):
                     xsrc.getSource(nextURL)
         return
 
-    player = getPlayer()
-    print('\n[xplay][setAct]\n\n\t'+ '%s,%s,%s' %(player, act, val))
+    print('\n[xplay][setAct]\n\n\t'+ '%s,%s,%s' %(opts.player, act, val))
 
-    if player == 'mpv' and xproc.checkProcessRunning('mpv'):
-        return mpv.setAct(act, val)
-
-    if player == 'omxp' and xproc.checkProcessRunning('omxplayer.bin'):
-        return omxp.setAct(act, val)
-
-    if player == 'ffplay' and xproc.checkProcessRunning('ffplay'):
-        return ffplay.setAct(act, val)
+    if players.isRunning(opts.player):
+        return players.setACT(opts.player, act, val)
 

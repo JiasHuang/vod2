@@ -10,7 +10,7 @@ def checkProcessRunning(process):
         return None
 
 def checkOutput(cmd, patten=None):
-    output = subprocess.check_output(cmd, shell=True)
+    output = subprocess.check_output(cmd, shell=True).decode('utf8')
     if patten:
         m = re.search(patten, output)
         if m:

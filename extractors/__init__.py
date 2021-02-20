@@ -2,7 +2,6 @@ import os
 import re
 import glob
 
-#import youtubedl
 import xurl
 
 from .youtubedl import extractURL, extractSUB

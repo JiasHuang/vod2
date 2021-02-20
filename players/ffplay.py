@@ -3,8 +3,8 @@ import re
 import subprocess
 
 import xdef
-import xproc
 import xsrc
+import xproc
 
 def setAct(act, val):
 
@@ -42,25 +42,27 @@ def setAct(act, val):
         print('\n[ffplay][setAct] unsupported: %s %s' %(act, val))
     return
 
-def play(url, ref):
+def play(url, ref, opts):
 
-    xargs = ''
+    args = ''
 
-    url, cookies, ref = xsrc.getSource(url, ref=ref)
+    url, cookies, ref = xsrc.getSource(url, opts.format, ref)
 
     if not url:
         print('\n[ffplay][play] invalid url')
         return
 
     if cookies:
-        xargs += ' -headers "Cookie: %s"' %(cookies)
+        args += ' -headers "Cookie: %s"' %(cookies)
 
     if xproc.checkProcessRunning('ffplay'):
         setAct('stop', None)
 
-    cmd = '%s %s \'%s\'' %(xdef.ffplay, xargs, url)
+    cmd = '%s %s \'%s\'' %(xdef.ffplay, args, url)
     print('\n[ffplay][cmd]\n\n\t'+cmd+'\n')
     subprocess.Popen(cmd, shell=True).communicate()
 
     return
 
+def isRunning():
+    return xproc.checkProcessRunning('ffplay')

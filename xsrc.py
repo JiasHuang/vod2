@@ -1,7 +1,6 @@
 import extractors
-import xarg
 
-def getSource(url, ref=None):
+def getSource(url, fmt, ref):
 
     src = None
     cookies = None
@@ -16,7 +15,7 @@ def getSource(url, ref=None):
         src = None
 
     else:
-        src, cookies, ref = extractors.getSource(url, xarg.ytdlfmt, ref)
+        src, cookies, ref = extractors.getSource(url, fmt, ref)
 
     if src:
         return src, cookies, ref
@@ -24,6 +23,6 @@ def getSource(url, ref=None):
     raise Exception('GetSourceError')
     return None, None, None
 
-def getSub(url):
-    return extractors.getSub(url, xarg.subtitle)
+def getSub(url, opt):
+    return extractors.getSub(url, opt)
 

@@ -23,7 +23,7 @@ class cmd_obj:
         self.status = status
 
 def runCmd(cmd):
-    cmd = '%s %s' %(xdef.cmd, cmd or '')
+    cmd = '%s -c %s' %(xdef.vod, cmd)
     print(cmd)
     if os.path.exists('/usr/bin/xterm'):
         subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd])
@@ -39,7 +39,7 @@ def playURL(player, url, opts=[]):
         subprocess.Popen(cmd, shell=True)
 
 def sendACT(player, act, num):
-    cmd = '%s -p %s \'%s\' \'%s\'' %(xdef.act, player, act, num)
+    cmd = '%s -p %s -a \'%s\' -v \'%s\'' %(xdef.vod, player, act, num)
     print(cmd)
     if os.path.exists('/usr/bin/xterm'):
         subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd]).communicate()

@@ -4,9 +4,9 @@ import subprocess
 import time
 
 import xdef
-import xproc
 import xsrc
 import xurl
+import xproc
 
 def setAct(act, val):
     if act == 'forward' and val:
@@ -26,12 +26,12 @@ def setAct(act, val):
     os.system('echo %s > %s' %(cmd, xdef.fifo))
     return
 
-def play(url, ref):
+def play(url, ref, opts):
 
     p = None
-    xargs = []
+    args = []
 
-    url, cookies, ref = xsrc.getSource(url, ref=ref)
+    url, cookies, ref = xsrc.getSource(url, opts.format, ref)
 
     if not url:
         print('\n[mpv][play] invalid url\n')
@@ -48,13 +48,13 @@ def play(url, ref):
 
     if not xproc.checkProcessRunning('mpv'):
 
-        xargs.append('--user-agent=\'%s\'' %(xurl.defvals.ua))
-        xargs.append('--referrer=\'%s\'' %(ref))
+        args.append('--user-agent=\'%s\'' %(xurl.defvals.ua))
+        args.append('--referrer=\'%s\'' %(ref))
 
         if cookies:
-            xargs.append('--http-header-fields="Cookie:%s"' %(cookies))
+            args.append('--http-header-fields="Cookie:%s"' %(cookies))
 
-        cmd = '%s %s \'%s\'' %(xdef.mpv, ' '.join(xargs), url)
+        cmd = '%s %s \'%s\'' %(xdef.mpv, ' '.join(args), url)
         print('\n[mpv][cmd]\n\n\t'+cmd+'\n')
         p = subprocess.Popen(cmd, shell=True)
 
@@ -62,7 +62,7 @@ def play(url, ref):
         os.system('echo loadfile \"%s\" > %s' %(url, xdef.fifo))
         os.system('echo sub-remove > %s' %(xdef.fifo))
 
-    sub = xsrc.getSub(ref)
+    sub = xsrc.getSub(ref, opts.subtitle)
     if sub:
         os.system('echo sub-add \"%s\" select > %s' %(sub, xdef.fifo))
 
@@ -74,3 +74,6 @@ def play(url, ref):
 def append(url):
     os.system('echo loadfile \"%s\" append > %s' %(url, xdef.fifo))
     return
+
+def isRunning():
+    return xproc.checkProcessRunning('mpv')
