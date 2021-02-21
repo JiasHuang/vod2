@@ -24,7 +24,7 @@ class cmd_obj:
 
 def runCmd(cmd):
     cmd = '%s -c %s' %(xdef.vod, cmd)
-    os.system(cmd)
+    subprocess.Popen(cmd, shell=True)
 
 def playURL(url, opts=[]):
     cmd = '%s %s \'%s\'' %(xdef.vod, ' '.join(opts), url)

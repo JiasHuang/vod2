@@ -20,7 +20,7 @@ def get_redirect_location(post_data):
     i = unquote(post_data.decode('utf8'))[2:]
     x = quote(i)
     if i.startswith('#'):
-        return 'index.html?c=' + x[1:]
+        return 'index.html?c=' + quote(i[1:])
     elif i.startswith('http'):
         return 'index.html?v=' + x
     elif i.startswith('/') and os.path.isdir(i):
