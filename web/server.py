@@ -2,6 +2,7 @@
 
 import re
 import os
+import configparser
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.cookies import SimpleCookie
@@ -108,7 +109,14 @@ def main():
     parser.add_option("-p", "--hostport", type="int", dest="port", default=xdef.hostport)
     parser.add_option("-P", "--player", dest="player")
     parser.add_option("-b", "--bookmark", dest="bookmark", default=xdef.bookmark)
+    parser.add_option("-c", "--config", dest="config")
     (opts, args) = parser.parse_args()
+
+    if opts.config:
+        parser = configparser.ConfigParser()
+        parser.read(opts.config)
+        for k in parser['VODServer']:
+            setattr(opts, k, parser['VODServer'][k])
 
     webServer = HTTPServer((opts.hostname, opts.port), VODServer)
     print('VOD Server started http://%s:%s' % (opts.hostname, opts.port))

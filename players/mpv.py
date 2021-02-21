@@ -41,12 +41,12 @@ def play(url, ref, opts):
         os.system('mkfifo %s' %xdef.fifo)
         os.system('chmod 666 %s' %xdef.fifo)
 
-    if cookies and re.search(r'google.com', url) and xproc.checkProcessRunning('mpv'):
+    if cookies and re.search(r'google.com', url) and isRunning():
         os.system('echo stop > %s' %(xdef.fifo))
-        while xproc.checkProcessRunning('mpv'):
+        while isRunning():
             time.sleep(1)
 
-    if not xproc.checkProcessRunning('mpv'):
+    if not isRunning():
 
         args.append('--user-agent=\'%s\'' %(xurl.defvals.ua))
         args.append('--referrer=\'%s\'' %(ref))

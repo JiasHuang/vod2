@@ -35,7 +35,7 @@ def setAct(act, val):
 
 def play(url, ref, opts, cookies=None):
 
-    args = '--user-agent=\'%s\'' %(xurl.defvals.ua)
+    args = ['--user-agent=\'%s\'' %(xurl.defvals.ua)]
 
     url, cookies, ref = xsrc.getSource(url, opts.format, ref)
 
@@ -43,16 +43,16 @@ def play(url, ref, opts, cookies=None):
         print('\n[omxplayer][play] invalid url\n')
         return
 
-    if xproc.checkProcessRunning('omxplayer.bin'):
+    if isRunning():
         setAct('stop', None)
 
     if cookies:
-        args = ' '.join([args, '--avdict headers:\"Cookie: %s\"' %(cookies)])
+        args.append('--avdict headers:\"Cookie: %s\"' %(cookies))
 
     if re.search(r'/hls_playlist/', url):
         cmd = 'livestreamer --player omxplayer --fifo \'hls://%s\' best 2>&1 | tee %s' %(url, xdef.log)
     else:
-        cmd = '%s %s \'%s\' 2>&1 | tee %s' %(xdef.omxplayer, args, url, xdef.log)
+        cmd = '%s %s \'%s\' 2>&1 | tee %s' %(xdef.omxplayer, ' '.join(args), url, xdef.log)
 
     print('\n[omx][cmd]\n\n\t'+cmd+'\n')
     subprocess.Popen(cmd, shell=True).communicate()

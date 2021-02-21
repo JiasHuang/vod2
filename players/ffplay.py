@@ -8,9 +8,8 @@ import xproc
 
 def setAct(act, val):
 
-    pid = xproc.checkProcessRunning('ffplay')
-    if not pid:
-        print('\n[ffplay][secAct] no pid')
+    if not isRunning():
+        print('\n[ffplay][secAct] no running')
         return
 
     wid = xproc.checkOutput('xdotool search --name ffplay', r'([0-9]*)$')
@@ -44,7 +43,7 @@ def setAct(act, val):
 
 def play(url, ref, opts):
 
-    args = ''
+    args = []
 
     url, cookies, ref = xsrc.getSource(url, opts.format, ref)
 
@@ -53,12 +52,12 @@ def play(url, ref, opts):
         return
 
     if cookies:
-        args += ' -headers "Cookie: %s"' %(cookies)
+        args.append('-headers "Cookie: %s"' %(cookies))
 
-    if xproc.checkProcessRunning('ffplay'):
+    if isRunning():
         setAct('stop', None)
 
-    cmd = '%s %s \'%s\'' %(xdef.ffplay, args, url)
+    cmd = '%s %s \'%s\'' %(xdef.ffplay, ' '.join(args), url)
     print('\n[ffplay][cmd]\n\n\t'+cmd+'\n')
     subprocess.Popen(cmd, shell=True).communicate()
 
