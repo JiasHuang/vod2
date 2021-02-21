@@ -1,8 +1,8 @@
 import re
 import os
-import subprocess
 
 import xurl
+import xproc
 
 def unpackURL(url):
     txt = xurl.load(url)
@@ -53,7 +53,7 @@ def executeJSCode(code):
     local = xurl.genLocal(str(os.getuid), prefix='vod_code_')
     xurl.saveLocal(local, code)
     try:
-        output = subprocess.check_output('nodejs '+local, shell=True).rstrip('\n')
+        output = xproc.checkOutput('nodejs '+local)
     except:
         return None
     output = output.replace("\/", "/")

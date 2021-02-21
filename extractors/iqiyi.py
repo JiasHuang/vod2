@@ -34,7 +34,7 @@ def loadM3U8(url):
 
 def getDashURL(url):
     cmd = 'google-chrome-stable --headless --disable-gpu --enable-logging --v=1 \'%s\'' %(url)
-    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+    output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).decode('utf8')
     m = re.search(r'https://cache.video.iqiyi.com/dash.*', output)
     if m:
         return m.group(0)

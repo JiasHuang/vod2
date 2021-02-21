@@ -4,7 +4,7 @@ import subprocess
 def checkProcessRunning(process):
     cmd = 'pidof %s' %(process)
     try:
-        result = subprocess.check_output(cmd, shell=True)
+        result = subprocess.check_output(cmd, shell=True).decode('utf8')
         return result
     except:
         return None

@@ -3,7 +3,6 @@ import sys
 import re
 import hashlib
 import time
-import subprocess
 
 try:
     # python 3
@@ -28,7 +27,7 @@ class delayObj:
         self.time = None
     objs = []
 
-class xurlObj(object):
+class xurlObj:
     def __init__(self, url, cookies=None, ref=None):
         self.url = url
         self.cookies = cookies
@@ -105,7 +104,7 @@ def curl(url, local, opts, ref):
     opts.append('--compressed')
     cmd = 'curl -kLsf -o %s %s \'%s\'' %(local, ' '.join(opts), url)
     try:
-        subprocess.check_output(cmd, shell=True)
+        os.system(cmd)
     except:
         print('Exception:\n' + cmd)
     return readLocal(local)
@@ -114,13 +113,13 @@ def load(url, local=None, opts=None, ref=None, cache=True, cacheOnly=False, expi
     local = local or genLocal(url)
     expiration = expiration or defvals.expiration
     if cacheOnly or (cache and not checkExpire(local, expiration)):
-        print('%s -> %s (cache)' %(url, local))
+        print('[xurl] %s -> %s (cached)' %(url, local))
         return readLocal(local)
     checkDelay(url)
     t0 = time.time()
     ret = eval('%s(url, local, opts=opts, ref=ref)' %(cmd))
     t1 = time.time()
-    print('%s -> %s (%s)' %(url, local, t1 - t0))
+    print('[xurl] %s -> %s (%.2fs)' %(url, local, t1 - t0))
     return ret
 
 def addDelayObj(flt, delay):

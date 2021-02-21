@@ -24,27 +24,15 @@ class cmd_obj:
 
 def runCmd(cmd):
     cmd = '%s -c %s' %(xdef.vod, cmd)
-    print(cmd)
-    if os.path.exists('/usr/bin/xterm'):
-        subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd])
-    else:
-        subprocess.Popen(cmd, shell=True).communicate()
+    os.system(cmd)
 
 def playURL(url, opts=[]):
     cmd = '%s %s \'%s\'' %(xdef.vod, ' '.join(opts), url)
-    print(cmd)
-    if os.path.exists('/usr/bin/xterm'):
-        subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd])
-    else:
-        subprocess.Popen(cmd, shell=True)
+    subprocess.Popen(cmd, shell=True)
 
 def sendACT(act, num, opts):
     cmd = '%s %s -a \'%s\' -v \'%s\'' %(xdef.vod, ' '.join(opts), act, num)
-    print(cmd)
-    if os.path.exists('/usr/bin/xterm'):
-        subprocess.Popen(['/usr/bin/xterm', '-geometry', '80x24-50+50', '-display', ':0', '-e', cmd]).communicate()
-    else:
-        subprocess.Popen(cmd, shell=True).communicate()
+    os.system(cmd)
 
 def getOptionsByCookies(cookies):
     opts = []

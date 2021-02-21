@@ -55,6 +55,8 @@ def dispatch_request(s, cookies=None):
     return None
  
 class VODServer(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass
     def do_POST(self):
         content_len = int(self.headers.get('Content-Length'))
         post_data = self.rfile.read(content_len)

@@ -1,6 +1,5 @@
 import os
 import re
-import subprocess
 
 import xdef
 import xsrc
@@ -59,7 +58,7 @@ def play(url, ref, opts):
 
     cmd = '%s %s \'%s\'' %(xdef.ffplay, ' '.join(args), url)
     print('\n[ffplay][cmd]\n\n\t'+cmd+'\n')
-    subprocess.Popen(cmd, shell=True).communicate()
+    os.system(cmd)
 
     return
 

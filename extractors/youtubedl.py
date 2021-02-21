@@ -1,13 +1,12 @@
 import os
 import re
 import subprocess
-import hashlib
 import json
-import time
 import base64
 import timeit
 
 import xurl
+import xproc
 
 class defvals:
     ytdlsub  = '--no-warnings --write-sub --skip-download --sub-lang=en,en-US'
@@ -124,7 +123,7 @@ def extractURL(url, fmt, key=None, ref=None, dontParseJson=False):
 
     try:
         start_time = timeit.default_timer()
-        output = subprocess.check_output(cmd, shell=True)
+        os.system(cmd)
         elapsed = timeit.default_timer() - start_time
     except:
         elapsed = timeit.default_timer() - start_time
@@ -158,7 +157,7 @@ def extractSUB(url, subtitle=None):
         cmd = '%s %s %s -o %s \'%s\'' %(ytdlcmd(), defvals.ytdlsub, opt, sub, url)
 
         start_time = timeit.default_timer()
-        output = subprocess.check_output(cmd, shell=True)
+        output = xproc.checkOutput(cmd)
         elapsed = timeit.default_timer() - start_time
         print('\tsec: '+str(elapsed))
     except:

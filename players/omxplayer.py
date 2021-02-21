@@ -1,5 +1,4 @@
 import re
-import subprocess
 
 import xdef
 import xurl
@@ -29,8 +28,7 @@ def setAct(act, val):
         return
 
     print('\n[omxplayer][act]\n\n\t%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd))
-    result = subprocess.check_output('%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd), shell=True)
-    print('\n[omxplayer][result]\n\n\t%s' %(result))
+    os.system('%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd))
     return
 
 def play(url, ref, opts, cookies=None):
@@ -55,7 +53,7 @@ def play(url, ref, opts, cookies=None):
         cmd = '%s %s \'%s\' 2>&1 | tee %s' %(xdef.omxplayer, ' '.join(args), url, xdef.log)
 
     print('\n[omx][cmd]\n\n\t'+cmd+'\n')
-    subprocess.Popen(cmd, shell=True).communicate()
+    os.system(cmd)
 
     return
 
