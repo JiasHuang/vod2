@@ -39,9 +39,9 @@ VOD Server started http://localhost:9000
 
 - install youtube-dl
 - install livestreamer
-		sudo apt install livestreamer
+>	sudo apt install livestreamer
 - edit /home/pi/.config/lxsession/LXDE-pi/autostart
-		@lxpanel --profile LXDE-pi
-		@pcmanfm --desktop --profile LXDE-pi
-		@lxterminal -geometry=80x24 -e /home/pi/work/vod2/web/server.py -c /home/pi/.myconfig
+>	@lxpanel --profile LXDE-pi
+>	@pcmanfm --desktop --profile LXDE-pi
+>	@lxterminal -geometry=80x24 -e /home/pi/work/vod2/web/server.py -c /home/pi/.myconfig
 
