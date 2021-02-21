@@ -132,5 +132,5 @@ def setAct(act, val, opts):
     print('\n[xplay][setAct]\n\n\t'+ '%s,%s,%s' %(player.n, act, val))
 
     if player.isRunning():
-        return player.setACT(act, val)
+        return player.setAct(act, val)
 

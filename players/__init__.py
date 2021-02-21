@@ -20,6 +20,6 @@ class player:
     def play(self, url, ref, opts):
         mods[self.n].play(url, ref, opts)
         return
-    def setACT(self, act, val):
-        mods[self.n].setACT(act, val)
+    def setAct(self, act, val):
+        mods[self.n].setAct(act, val)
         return
