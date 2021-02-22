@@ -9,32 +9,23 @@ import xurl
 
 class defvals:
     prog = 'vlc'
-    passwd = '__p_a_s_s_w_o_r_d__'
     port = '9090'
-    args = '-I http --http-port %s --http-password %s --no-video-title-show -f' %(port, passwd)
-    intf = 'http://127.0.0.1:%s/requests/status.xml?command=' %(port)
+    args = '-I rc --rc-host :%s --no-video-title-show -f' %(port)
+    dest = 'nc -q0 127.0.0.1 %s' %(port)
 
 def setAct(act, val):
-
-    intf = defvals.intf
-
     if act == 'forward' and val:
-        intf += 'seek&val=' + xurl.quote('+' + val)
+        os.system('echo seek +%s | %s' %(val, defvals.dest))
     elif act == 'backward' and val:
-        intf += 'seek&val=' + xurl.quote('-' + val)
+        os.system('echo seek -%s | %s' %(val, defvals.dest))
     elif act == 'percent' and val:
-        intf += 'seek&val=' + xurl.quote(val + '%')
+        os.system('echo seek %s | %s' %(val+'%', defvals.dest))
     elif act in ['pause', 'stop']:
-        intf += 'pl_' + act
-    elif act == 'in_play':
-        intf += 'in_play&input=' + xurl.quote(val)
+        os.system('echo %s | %s' %(act, defvals.dest))
+    elif act == 'add':
+        os.system('echo add \'%s\' | %s' %(val, defvals.dest))
     else:
         print('unsupported: %s %s' %(act, val))
-        return
-
-    if not len(xurl.load(intf, opts=['-u :'+defvals.passwd], cache=False)):
-        print('failed to setAct')
-
     return
 
 def play(url, ref, opts, cookies=None):
@@ -48,7 +39,7 @@ def play(url, ref, opts, cookies=None):
         return
 
     if isRunning():
-        setAct('in_play', url)
+        setAct('add', url)
         return
 
     cmd = '%s %s %s \'%s\'' %(defvals.prog, defvals.args, ' '.join(args), url)
