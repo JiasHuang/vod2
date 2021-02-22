@@ -8,6 +8,10 @@ import xsrc
 import xurl
 import xproc
 
+class defvals:
+    prog = 'mpv'
+    args = '--fs --ontop --ytdl=no --demuxer-lavf-o=protocol_whitelist=\\"file,http,https,tcp,tls,crypto\\" --input-file=%s --save-position-on-quit' %(xdef.fifo)
+
 def setAct(act, val):
     if act == 'forward' and val:
         cmd = 'seek %s' %(val)
@@ -54,7 +58,7 @@ def play(url, ref, opts):
         if cookies:
             args.append('--http-header-fields="Cookie:%s"' %(cookies))
 
-        cmd = '%s %s \'%s\'' %(xdef.mpv, ' '.join(args), url)
+        cmd = '%s %s %s \'%s\'' %(defvals.prog, defvals.args, ' '.join(args), url)
         print('\n[mpv][cmd]\n\n\t'+cmd+'\n')
         p = subprocess.Popen(cmd, shell=True)
 
@@ -76,4 +80,4 @@ def append(url):
     return
 
 def isRunning():
-    return xproc.checkProcessRunning('mpv')
+    return xproc.checkProcessRunning(defvals.prog)

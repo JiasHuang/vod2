@@ -6,6 +6,10 @@ import xurl
 import xproc
 import xsrc
 
+class defvals:
+    prog = 'omxplayer.bin'
+    args = '-b -o both -I'
+
 def setAct(act, val):
 
     if act == 'forward' and val:
@@ -51,7 +55,7 @@ def play(url, ref, opts, cookies=None):
     if re.search(r'/hls_playlist/', url):
         cmd = 'livestreamer --player omxplayer --fifo \'hls://%s\' best 2>&1 | tee %s' %(url, xdef.log)
     else:
-        cmd = '%s %s \'%s\' 2>&1 | tee %s' %(xdef.omxplayer, ' '.join(args), url, xdef.log)
+        cmd = '%s %s %s \'%s\' 2>&1 | tee %s' %(defvals.prog, defvals.args, ' '.join(args), url, xdef.log)
 
     print('\n[omx][cmd]\n\n\t'+cmd+'\n')
     os.system(cmd)
@@ -59,4 +63,4 @@ def play(url, ref, opts, cookies=None):
     return
 
 def isRunning():
-    return xproc.checkProcessRunning('omxplayer.bin')
+    return xproc.checkProcessRunning(defvals.prog)

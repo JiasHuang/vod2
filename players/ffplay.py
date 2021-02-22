@@ -5,6 +5,10 @@ import xdef
 import xsrc
 import xproc
 
+class defvals:
+    prog = 'ffplay'
+    args = '-fs -window_title ffplay'
+
 def setAct(act, val):
 
     if not isRunning():
@@ -56,11 +60,11 @@ def play(url, ref, opts):
     if isRunning():
         setAct('stop', None)
 
-    cmd = '%s %s \'%s\'' %(xdef.ffplay, ' '.join(args), url)
+    cmd = '%s %s %s \'%s\'' %(defvals.prog, defvals.args, ' '.join(args), url)
     print('\n[ffplay][cmd]\n\n\t'+cmd+'\n')
     os.system(cmd)
 
     return
 
 def isRunning():
-    return xproc.checkProcessRunning('ffplay')
+    return xproc.checkProcessRunning(defvals.prog)
