@@ -3,7 +3,7 @@
 ## Description
 
 - Play online streaming videos on Raspberry Pi.
-- Control playback on your mobile phone or tablet.
+- Browse and control videos via your mobile phone or tablet.
 - [Demo](https://www.youtube.com/watch?v=nKMpzaaDPuw)
 
 ## Requirements
@@ -37,6 +37,16 @@ web/server.py -n localhost -p 9000 -P mpv -b ~/Downloads/bookmark.json
 ```
 VOD Server started http://localhost:9000
 ```
+
+## Control Guide
+
+Button   | Description
+------   | -----------
+⏹        | stop
+▶        | play/pause
+num + ▶  | seek num%
+num + ⏭  | seek +num secs
+num + ⏮  | seek -num secs
 
 ### Installation on Raspberry Pi
 
