@@ -7,7 +7,8 @@ import xproc
 import xsrc
 
 class defvals:
-    prog = 'omxplayer.bin'
+    prog = 'omxplayer'
+    proc = 'omxplayer.bin'
     args = '-b -o both -I'
 
 def setAct(act, val):
@@ -63,4 +64,4 @@ def play(url, ref, opts, cookies=None):
     return
 
 def isRunning():
-    return xproc.checkProcessRunning(defvals.prog)
+    return xproc.checkProcessRunning(defvals.proc)
