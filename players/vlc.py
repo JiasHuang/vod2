@@ -11,7 +11,7 @@ class defvals:
     prog = 'vlc'
     passwd = '__p_a_s_s_w_o_r_d__'
     port = '9090'
-    args = '-I http --http-port %s --http-password %s --no-video-title-show' %(port, passwd)
+    args = '-I http --http-port %s --http-password %s --no-video-title-show -f' %(port, passwd)
     intf = 'http://127.0.0.1:%s/requests/status.xml?command=' %(port)
 
 def setAct(act, val):

@@ -22,7 +22,8 @@ web/server.py -c config
 
 - mpv
 - ffplay
-- omxplayer (For Raspberry Pi)
+- omxplayer
+- vlc
 
 ## Bookmark URL and Example
 
