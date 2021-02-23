@@ -10,6 +10,7 @@ class defvals:
     prog = 'omxplayer'
     proc = 'omxplayer.bin'
     args = '-b -o both -I'
+    dbus = xdef.codedir + 'dbuscontrol.sh'
 
 def setAct(act, val):
 
@@ -18,23 +19,23 @@ def setAct(act, val):
     elif act == 'backward' and val:
         cmd = 'seek -%s' %(int(val) * 1000000)
     elif act == 'percent' and val:
-        with open(xdef.log, 'r') as fd:
-            m = re.search(r'Duration: (.*?):(.*?):(.*?),', fd.read())
-            if m:
-                duration = int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(float(m.group(3)))
-                position = duration * int(val) * 1000000 / 100
-                cmd = 'setposition %s' %(position)
-            else:
-                print('Get Duration Fail')
-                return
+        output = xproc.checkOutput('%s status' %(defvals.dbus))
+        m = re.search(r'Duration: (\d*)', output)
+        if m:
+            duration = int(m.group(1))
+            position = duration * int(val) / 100
+            cmd = 'setposition %s' %(position)
+        else:
+            print('Get Duration Fail')
+            return
     elif act in ['pause', 'stop']:
         cmd = '%s' %(act)
     else:
         print('unsupported: %s %s' %(act, val))
         return
 
-    print('\n[omxplayer][act]\n\n\t%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd))
-    os.system('%s%s %s' %(xdef.codedir, 'dbuscontrol.sh', cmd))
+    print('\n[omxplayer][act]\n\n\t%s %s' %(defvals.dbus, cmd))
+    os.system('%s %s' %(defvals.dbus, cmd))
     return
 
 def play(url, ref, opts, cookies=None):
@@ -54,9 +55,9 @@ def play(url, ref, opts, cookies=None):
         args.append('--avdict headers:\"Cookie: %s\"' %(cookies))
 
     if re.search(r'/hls_playlist/', url):
-        cmd = 'livestreamer --player omxplayer --fifo \'hls://%s\' best 2>&1 | tee %s' %(url, xdef.log)
+        cmd = 'livestreamer --player omxplayer --fifo \'hls://%s\' best' %(url)
     else:
-        cmd = '%s %s %s \'%s\' 2>&1 | tee %s' %(defvals.prog, defvals.args, ' '.join(args), url, xdef.log)
+        cmd = '%s %s %s \'%s\'' %(defvals.prog, defvals.args, ' '.join(args), url)
 
     print('\n[omx][cmd]\n\n\t'+cmd+'\n')
     os.system(cmd)

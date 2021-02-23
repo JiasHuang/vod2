@@ -45,6 +45,8 @@ Button   | Description
 ⏹        | stop
 ▶        | play/pause
 num + ▶  | seek num%
+⏭        | seek +90 secs
+⏮        | seek -90 secs
 num + ⏭  | seek +num secs
 num + ⏮  | seek -num secs
 
