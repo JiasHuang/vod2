@@ -1,6 +1,5 @@
 import re
 
-import xurl
 from .utils import *
 
 VALID_URL = r'drive\.google\.com'
@@ -41,7 +40,7 @@ def extract(url):
 
 def search_gdrive(q, start=None):
     objs = []
-    url = 'http://www.google.com/search?num=100&hl=en&q=site%3Adrive.google.com%20' + xurl.quote(q)
+    url = 'http://www.google.com/search?num=100&hl=en&q=site%3Adrive.google.com%20' + q
     if start:
         url = url+'&start='+start
     txt = load(url)

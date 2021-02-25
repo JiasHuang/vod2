@@ -57,7 +57,7 @@ def getExtractorResultJSON(results):
 
 def getSearchJSON(q, s=None, x=None):
     s = (s or 'youtube').lower()
-    results = extractors.search(unquote_plus(q), s, x)
+    results = extractors.search(q, s, x)
     return getExtractorResultJSON(results)
 
 def getPageJSON(url):
