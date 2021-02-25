@@ -1,5 +1,6 @@
 import re
 
+import xurl
 from .utils import *
 
 VALID_URL = r'tiktokvideodown'
@@ -22,7 +23,7 @@ def extract(url):
 
 def search_tiktokvideodown(q, start=None):
     objs = []
-    url = defs.domain + '/vod-search-wd-%s.html' %(q)
+    url = defs.domain + '/vod-search-wd-%s.html' %(xurl.quote(q))
     for m in re.finditer(r'<h5><a href="(.*?)" title=".*?">(.*?)</a></h5>', load(url)):
         link, title = defs.domain + m.group(1), m.group(2)
         objs.append(pageObj(link, title))

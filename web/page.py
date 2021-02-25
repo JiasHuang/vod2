@@ -3,11 +3,9 @@ import os
 import sys
 import json
 
+from urllib.parse import unquote_plus
+
 import xurl
-
-path = os.path.realpath(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(path))
-
 import extractors
 
 class dir_entry_obj:
@@ -59,8 +57,7 @@ def getExtractorResultJSON(results):
 
 def getSearchJSON(q, s=None, x=None):
     s = (s or 'youtube').lower()
-    q1 = re.sub(' ', '+', q)
-    results = extractors.search(q1, s, x)
+    results = extractors.search(unquote_plus(q), s, x)
     return getExtractorResultJSON(results)
 
 def getPageJSON(url):

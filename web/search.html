@@ -35,9 +35,8 @@
     <div id="menubox" class="menubox" style="display: none" onclick="onMenuClick()"></div>
 
     <div id="searchbar" class="searchbar">
-        <form action="search.html" method="get" id="xform">
-        <input type="text" id="input_q" name="q" value="" id="xinput" \>
-        <select id="select_engine" name="s" onchange="onSelectChange.call(this)">
+        <input type="text" id="input_q" value="" onchange="onSearch()" \>
+        <select id="select_engine" onchange="onSearch()">
             <option value="youtube">YouTube</option>
             <option value="long">Long</option>
             <option value="playlist">Playlist</option>
@@ -49,7 +48,6 @@
             <option value="tiktokvideodown">Tiktokvideodown</option>
             <option value="gimy">Gimy</option>
         </select>
-        </form>
     </div>
 
     <div class="space"></div>

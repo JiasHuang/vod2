@@ -33,14 +33,9 @@ class xurlObj:
         self.cookies = cookies
         self.ref = ref
 
-def init(logfile=None):
-    if logfile:
-        path = os.path.join(defvals.workdir, logfile)
-        sys.stdout = open(path, 'w+')
-
-def readLocal(local):
+def readLocal(local, encoding=None):
     if os.path.exists(local):
-        fd = open(local, 'r')
+        fd = open(local, 'r', encoding=encoding, errors='replace')
         txt = fd.read()
         fd.close()
         return txt
@@ -74,7 +69,11 @@ def checkExpire(local, expiration=None):
         return True
     return False
 
-def genLocal(url, prefix=None, suffix=None):
+def genLocal(url, prefix=None, suffix=None, opts=None):
+    if opts and isinstance(opts, list):
+        for opt in opts:
+            if opt.startswith('--data-raw'):
+                url = url + opt
     local = defvals.workdir+(prefix or 'vod_load_')+hashlib.md5(url.encode('utf8')).hexdigest()+(suffix or '')
     return local
 
@@ -95,7 +94,7 @@ def getContentType(url):
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-def curl(url, local, opts, ref):
+def curl(url, local, opts, ref, encoding):
     opts = opts or []
     if ref:
         opts.append('-e \'%s\'' %(ref))
@@ -107,19 +106,21 @@ def curl(url, local, opts, ref):
         os.system(cmd)
     except:
         print('Exception:\n' + cmd)
-    return readLocal(local)
+    return readLocal(local, encoding)
 
-def load(url, local=None, opts=None, ref=None, cache=True, cacheOnly=False, expiration=None, cmd='curl'):
-    local = local or genLocal(url)
+def load(url, local=None, opts=None, ref=None, cache=True, cacheOnly=False, expiration=None, cmd='curl', verbose=True, encoding=None):
+    local = local or genLocal(url, opts=opts)
     expiration = expiration or defvals.expiration
     if cacheOnly or (cache and not checkExpire(local, expiration)):
-        print('[xurl] %s -> %s (cached)' %(url, local))
+        if verbose:
+            print('[xurl] %s -> %s (cache)' %(url, local))
         return readLocal(local)
     checkDelay(url)
     t0 = time.time()
-    ret = eval('%s(url, local, opts=opts, ref=ref)' %(cmd))
+    ret = eval('%s(url, local, opts=opts, ref=ref, encoding=encoding)' %(cmd))
     t1 = time.time()
-    print('[xurl] %s -> %s (%.2fs)' %(url, local, t1 - t0))
+    if verbose:
+        print('[xurl] %s -> %s (%s)' %(url, local, t1 - t0))
     return ret
 
 def addDelayObj(flt, delay):

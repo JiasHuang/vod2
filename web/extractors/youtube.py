@@ -137,7 +137,7 @@ def extract(url):
 
 def search_youtube(q, sp=None):
     objs = []
-    url = 'https://www.youtube.com/results?q='+ xurl.quote(q)
+    url = 'https://www.youtube.com/results?q=' + xurl.quote(q)
     if sp:
         url = url+'&sp='+sp
     data = parseYoutubeInitialDataJSON(url)

@@ -1,6 +1,7 @@
 import re
 import string
 
+import xurl
 from .utils import *
 
 VALID_URL = r'iqiyi'
@@ -40,7 +41,7 @@ def extract(url):
 
 def search_iqiyi(q, start=None):
     objs = []
-    url = 'http://www.google.com/search?tbm=vid&num=100&hl=en&q=site%3Aiqiyi.com%20'+q
+    url = 'http://www.google.com/search?tbm=vid&num=100&hl=en&q=site%3Aiqiyi.com%20' + xurl.quote(q)
     if start:
         url = url+'&start='+start
     txt = load(url)
@@ -50,10 +51,10 @@ def search_iqiyi(q, start=None):
         m2 = re.search(r'<h3.*?>(.*?)</h3>', desc)
         title = m2.group(1) if m2 else None
         m3 = re.search(r'"'+re.escape(img_id)+r'":"([^"]*)"', txt)
-        image = m3.group(1).decode('unicode_escape') if m3 else None
+        image = m3.group(1) if m3 else None
         idx = int(img_id.strip(string.ascii_letters)) - 1
         if not image and idx < len(img_codes):
-            image = img_codes[idx].decode('unicode_escape')
+            image = img_codes[idx]
         if link and title:
             objs.append(entryObj(link, title, image))
 

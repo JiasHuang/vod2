@@ -40,7 +40,7 @@ def extract(url):
 
 def search_bilibili(q, x=None):
     objs = []
-    url = 'https://api.bilibili.com/x/web-interface/search/type?jsonp=jsonp&search_type=video&keyword='+q
+    url = 'https://api.bilibili.com/x/web-interface/search/type?jsonp=jsonp&search_type=video&keyword=' + xurl.quote(q)
     jsonTxt = load(url)
     data = json.loads(jsonTxt)
     try:

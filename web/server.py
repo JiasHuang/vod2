@@ -6,7 +6,7 @@ import configparser
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.cookies import SimpleCookie
-from urllib.parse import urlparse, parse_qs, quote, unquote
+from urllib.parse import urlparse, parse_qs, quote, unquote, unquote_plus
 from optparse import OptionParser
 
 import view
@@ -17,7 +17,7 @@ import xurl
 opts = None
 
 def get_redirect_location(post_data):
-    i = unquote(post_data.decode('utf8'))[2:]
+    i = unquote_plus(post_data.decode('utf8'))[2:]
     x = quote(i)
     if i.startswith('#'):
         return 'index.html?c=' + quote(i[1:])

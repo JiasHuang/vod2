@@ -1,5 +1,6 @@
 import re
 
+import xurl
 from .utils import *
 
 VALID_URL = r'gimy\.co'
@@ -24,7 +25,7 @@ def extract(url):
 
 def search_gimy(q, start=None):
     objs = []
-    url = 'https://gimy.co/search/-------------.html?wd=%s' %(q)
+    url = 'https://gimy.co/search/-------------.html?wd=%s' %(xurl.quote(q))
     for m in re.finditer(r'href="([^"]*)" title="([^"]*)" data-original="([^"]*)"', load(url)):
         link = urljoin(url, m.group(1))
         title = m.group(2)

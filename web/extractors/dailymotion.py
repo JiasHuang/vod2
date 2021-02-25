@@ -1,6 +1,7 @@
 import re
 import json
 
+import xurl
 from .utils import *
 
 VALID_URL = r'dailymotion'
@@ -33,7 +34,7 @@ def extract(url):
         return [obj.to_video() for obj in findImageLink(url)]
 
 def search_dailymotion(q, x=None):
-    url = 'https://api.dailymotion.com/videos/?search="'+q+'"&limit=100&fields=id,title,duration'
+    url = 'https://api.dailymotion.com/videos/?search="' + xurl.quote(q) +'"&limit=100&fields=id,title,duration'
     return parseDailyMotionJSON(url)
 
 

@@ -30,10 +30,10 @@ function query(s, q) {
     }
 }
 
-function onSelectChange() {
+function onSearch() {
     var q = $('#input_q').val();
-    var engine = $(this).val();
-    window.location.href = 'search.html?q=' + q + '&s=' + engine;
+    var s = $('#select_engine').val();
+    window.location.href = 'search.html?q=' + q + '&s=' + s;
 }
 
 function onPlayVideo() {
@@ -51,7 +51,7 @@ function onDocumentReady() {
     var s = GetURLParameter("s") || 'youtube';
     var q = GetURLParameter("q");
     if (q) {
-        q = decodeURIComponent(q.replace(/\+/g," "));
+        q = decodeURIComponent(q);
         $('#input_q').val(q);
     }
     $('#select_engine').val(s);
