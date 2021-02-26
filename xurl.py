@@ -1,19 +1,12 @@
+#!/usr/bin/python3
+
 import os
 import sys
 import re
 import hashlib
 import time
 
-try:
-    # python 3
-    from urllib.request import urlopen, build_opener
-    from urllib.parse import urlparse, urlencode, quote, unquote, urljoin
-    from urllib.error import HTTPError, URLError
-except ImportError:
-    # python 2
-    from urlparse import urlparse, urljoin
-    from urllib import urlopen, quote, unquote
-    from urllib2 import build_opener, HTTPError, URLError
+from urllib.parse import urlparse, quote, unquote, unquote_plus, urljoin
 
 class defvals:
     workdir             = '/var/tmp/'
@@ -69,19 +62,13 @@ def checkExpire(local, expiration=None):
         return True
     return False
 
-def genLocal(url, prefix=None, suffix=None, opts=None):
+def genLocal(url, prefix='vod_load_', suffix='', opts=None):
     if opts and isinstance(opts, list):
         for opt in opts:
             if opt.startswith('--data-raw'):
                 url = url + opt
-    local = defvals.workdir+(prefix or 'vod_load_')+hashlib.md5(url.encode('utf8')).hexdigest()+(suffix or '')
+    local = os.path.join(defvals.workdir, prefix + hashlib.md5(url.encode('utf8')).hexdigest() + suffix)
     return local
-
-def parse(url):
-    p = urlparse(url)
-    prefix = p.scheme + '://' + p.netloc + os.path.dirname(p.path) + '/'
-    basename = os.path.basename(p.path)
-    return prefix, basename
 
 def getContentType(url):
     local = genLocal(url, suffix='.hdr')
