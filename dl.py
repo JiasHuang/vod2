@@ -59,6 +59,7 @@ def filter(url, flt):
             basename = os.path.basename(xurl.urlparse(link).path)
             newtxt = newtxt.replace(m.group(1), basename)
             results.append(link)
+            print('%s : %s' %(local, link))
     xurl.saveLocal(local, newtxt)
     return results
 
@@ -84,6 +85,7 @@ def dl(url, options):
     elif options.execute == 'curl':
         basename = os.path.basename(xurl.urlparse(url).path)
         cmd = 'curl -kLs -C - -o %s \'%s\'' %(basename, url)
+        cmd += ' -H \'referer: https://gimy.app/\''
         return subprocess.Popen(cmd, shell=True)
     elif options.cmd:
         cmd = '%s \'%s\'' %(options.cmd, url)
