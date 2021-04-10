@@ -59,7 +59,6 @@ def filter(url, flt):
             basename = os.path.basename(xurl.urlparse(link).path)
             newtxt = newtxt.replace(m.group(1), basename)
             results.append(link)
-            print('%s : %s' %(local, link))
     xurl.saveLocal(local, newtxt)
     return results
 
