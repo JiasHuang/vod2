@@ -2,7 +2,7 @@ import re
 
 import xurl
 
-VALID_URL = r'gimy\.co'
+VALID_URL = r'gimy'
 
 def getSource(url, fmt, ref):
     m = re.search(r'"url":"(http[^"]*)"', xurl.load(url))
