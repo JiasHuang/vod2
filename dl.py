@@ -48,6 +48,10 @@ def filter(url, flt):
     else:
         txt = xurl.readLocal(url)
 
+    m = re.search(r'#EXT-X-KEY:METHOD=AES-128,URI="(.*?)"', txt)
+    if m and not m.group(1).startswith('http'):
+        txt = txt.replace(m.group(1), xurl.urljoin(url, m.group(1)))
+
     newtxt = txt
     results = []
     for m in re.finditer(flt, txt):
@@ -84,7 +88,6 @@ def dl(url, options):
     elif options.execute == 'curl':
         basename = os.path.basename(xurl.urlparse(url).path)
         cmd = 'curl -kLs -C - -o %s \'%s\'' %(basename, url)
-        cmd += ' -H \'referer: https://gimy.app/\''
         return subprocess.Popen(cmd, shell=True)
     elif options.cmd:
         cmd = '%s \'%s\'' %(options.cmd, url)
