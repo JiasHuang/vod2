@@ -3,18 +3,19 @@
 import re
 import os
 import configparser
+import argparse
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.cookies import SimpleCookie
 from urllib.parse import urlparse, parse_qs, quote, unquote, unquote_plus
-from optparse import OptionParser
 
 import view
 import page
 import xdef
 import xurl
 
-opts = None
+class defvals:
+    section = 'VODServer'
 
 def get_redirect_location(post_data):
     i = unquote_plus(post_data.decode('utf8'))[2:]
@@ -32,19 +33,19 @@ def get_redirect_location(post_data):
     print('FAILED TO GET REDIRECT LOCATION ' + i)
     return None
 
-def dispatch_request(s, cookies=None):
+def dispatch_request(args, s, cookies=None):
     if s.startswith('a='):
         m = re.search(r'a=([^&]*)&n=(.*)', s)
-        return view.entry_act(opts.player, m.group(1), m.group(2))
+        return view.entry_act(args.player, m.group(1), m.group(2))
     if s.startswith('c='):
         return view.entry_cmd(s[2:])
     if s.startswith(('v=', 'f=')):
-        return view.entry_play(opts.player, s[2:], cookies)
+        return view.entry_play(args.player, s[2:], cookies)
     if s.startswith('p='):
         return page.entry_page(s[2:])
     if s.startswith('j='):
         if s == 'j=':
-            return page.entry_json(opts.bookmark)
+            return page.entry_json(args.bookmark)
         return page.entry_json(s[2:])
     if s.startswith('q='):
         m = re.search(r'q=([^&]*)&s=(.*)', s)
@@ -55,6 +56,7 @@ def dispatch_request(s, cookies=None):
     return None
  
 class VODServer(BaseHTTPRequestHandler):
+    args = None
     def log_message(self, format, *args):
         pass
     def do_POST(self):
@@ -76,7 +78,7 @@ class VODServer(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', "text/html")
             self.end_headers()
-            results = dispatch_request(p.query, cookies)
+            results = dispatch_request(self.args, p.query, cookies)
             self.wfile.write(bytes(results, 'utf8'))
             return
         if p.path.endswith(('.css', '.js', '.html', '.png', '.gif')):
@@ -101,27 +103,44 @@ class VODServer(BaseHTTPRequestHandler):
         self.send_error(404, 'File Not Found: %s' %(self.path))
         return
 
+class LoadConfig(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        cfg = configparser.ConfigParser()
+        cfg.read(values)
+        for k in cfg[defvals.section]:
+            if isinstance(getattr(namespace, k), int):
+                setattr(namespace, k, int(cfg[defvals.section][k]))
+            elif isinstance(getattr(namespace, k), bool):
+                setattr(namespace, k, str2bool(cfg[defvals.section][k]))
+            else:
+                setattr(namespace, k, cfg[defvals.section][k])
+
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 def main():
-    global opts
 
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-    parser = OptionParser()
-    parser.add_option("-n", "--hostname", dest="hostname", default=xdef.hostname)
-    parser.add_option("-p", "--hostport", type="int", dest="port", default=xdef.hostport)
-    parser.add_option("-P", "--player", dest="player")
-    parser.add_option("-b", "--bookmark", dest="bookmark", default=xdef.bookmark)
-    parser.add_option("-c", "--config", dest="config")
-    (opts, args) = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--hostname', default=xdef.hostname)
+    parser.add_argument('-p', '--hostport', default=xdef.hostport)
+    parser.add_argument('-P', '--player')
+    parser.add_argument('-b', '--bookmark', default=xdef.bookmark)
+    parser.add_argument('-c', '--config', action=LoadConfig)
+    parser.add_argument('-v', '--verbose', type=str2bool, nargs='?', const=True, default=False)
+    args = parser.parse_args()
 
-    if opts.config:
-        parser = configparser.ConfigParser()
-        parser.read(opts.config)
-        for k in parser['VODServer']:
-            setattr(opts, k, parser['VODServer'][k])
-
-    webServer = HTTPServer((opts.hostname, opts.port), VODServer)
-    print('VOD Server started http://%s:%s' % (opts.hostname, opts.port))
+    VODServer.args = args
+    webServer = HTTPServer((args.hostname, args.hostport), VODServer)
+    print('VOD Server started http://%s:%s' % (args.hostname, args.hostport))
 
     try:
         webServer.serve_forever()
