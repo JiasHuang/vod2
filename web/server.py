@@ -41,6 +41,9 @@ def dispatch_request(args, s, cookies=None):
         return view.entry_cmd(s[2:])
     if s.startswith(('v=', 'f=')):
         return view.entry_play(args.player, s[2:], cookies)
+    if s.startswith('e='):
+        qs = s.split('&', 1)
+        return view.entry_extract(qs[1][2:], qs[0][2:])
     if s.startswith('p='):
         return page.entry_page(s[2:])
     if s.startswith('j='):

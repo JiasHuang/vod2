@@ -32,6 +32,12 @@ var settings = {
         'type' : 'input',
         'defs' : 'zuida=4, pangzitv=4, .le.com=4, tiktokvideodown=4, iqiyi=4, gimy=4'
     },
+    'run_as_extractor' : {
+        'type' : 'select',
+        'vals' : ['yes', 'no'],
+        'defs' : 'no'
+    },
+
 };
 
 var settings_cookies = ['format', 'subtitle', 'dlconf'];

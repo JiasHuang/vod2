@@ -115,7 +115,7 @@ function updateResult() {
       dataType: 'json',
       error: onTimeout,
       success: parseJSON,
-      timeout: 2000
+      timeout: 20000
     });
   }
 }
