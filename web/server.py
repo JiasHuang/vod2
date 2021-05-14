@@ -73,7 +73,7 @@ class VODServer(BaseHTTPRequestHandler):
             self.end_headers()
             return
         p = urlparse(self.path)
-        if p.path in ['/view', '/load']:
+        if p.path.endswith('.py'):
             cookies = SimpleCookie(self.headers.get('Cookie'))
             self.send_response(200)
             self.send_header('Content-type', "text/html")
@@ -136,7 +136,19 @@ def main():
     parser.add_argument('-b', '--bookmark', default=xdef.bookmark)
     parser.add_argument('-c', '--config', action=LoadConfig)
     parser.add_argument('-v', '--verbose', type=str2bool, nargs='?', const=True, default=False)
+    parser.add_argument('-e', '--eval')
+    parser.add_argument('-o', '--output')
     args = parser.parse_args()
+
+    if args.eval and args.output:
+        # FIXME: set DISPLAY
+        if os.path.exists('/usr/bin/xterm'):
+            xdef.vod = '/usr/bin/xterm -geometry 80x24-50+50 -display :0 -e ' + xdef.vod
+        else:
+            xdef.vod = 'DISPLAY=:0 ' + xdef.vod
+        with open(args.output, 'w') as fd:
+            fd.write(eval('dispatch_request(args, args.eval)'))
+        return
 
     VODServer.args = args
     webServer = HTTPServer((args.hostname, args.hostport), VODServer)

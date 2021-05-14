@@ -92,7 +92,7 @@ function parseJSON(obj) {
 
 function onDocumentReady() {
   $.ajax({
-    url: 'load' + window.location.search,
+    url: 'load.py' + window.location.search,
     dataType: 'json',
     error: onTimeout,
     success: parseJSON,

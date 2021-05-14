@@ -57,7 +57,7 @@ function setKey(key) {
 
 function setAct(act, num='') {
     $.ajax({
-      url: 'view?a='+act+'&n='+num,
+      url: 'cmd.py?a='+act+'&n='+num,
       dataType: 'json',
       error: onTimeout,
       success: parseJSON,
@@ -111,7 +111,7 @@ function onTimeout() {
 function updateResult() {
   if (window.location.search != '') {
     $.ajax({
-      url: 'view' + window.location.search,
+      url: 'cmd.py' + window.location.search,
       dataType: 'json',
       error: onTimeout,
       success: parseJSON,

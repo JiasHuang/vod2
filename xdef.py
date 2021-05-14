@@ -1,6 +1,6 @@
 import os
 
-codedir   = os.path.dirname(os.path.realpath(__file__)) + '/'
+codedir   = os.path.dirname(os.path.realpath(__file__))
 workdir   = '/var/tmp/'
 dldir     = '/var/tmp/'
 fifo      = workdir + 'vod.fifo'
@@ -12,7 +12,7 @@ playbackMode = workdir + 'vod_%s_playbackMode' %(os.getuid())
 playing      = workdir + 'vod_%s_playing' %(os.getuid())
 
 # command locations
-vod = codedir + 'vod.py'
+vod = os.path.join(codedir, 'vod.py')
 
 # server settings
 hostname = ''

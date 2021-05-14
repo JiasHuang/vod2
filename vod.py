@@ -24,7 +24,7 @@ def handle_cmd(cmd):
     return
 
 def getSettingDefs():
-    local = xdef.codedir + 'web/settings.js'
+    local = os.path.join(xdef.codedir, 'web', 'settings.js')
     m = re.search(r'var settings = ({.*?});', xurl.readLocal(local), re.DOTALL | re.MULTILINE)
     if m:
         return ast.literal_eval(m.group(1))

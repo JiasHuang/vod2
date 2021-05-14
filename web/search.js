@@ -14,7 +14,7 @@ function onTimeout() {
 function query(s, q) {
     if (q) {
         $('#loadingMessage').show();
-        url = "load?q="+encodeURIComponent(q);
+        url = "load.py?q="+encodeURIComponent(q);
         if (s)
             url += "&s="+s;
         $.ajax({

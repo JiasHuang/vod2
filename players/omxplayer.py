@@ -10,7 +10,7 @@ class defvals:
     prog = 'omxplayer'
     proc = 'omxplayer.bin'
     args = '-b -o both -I'
-    dbus = xdef.codedir + 'dbuscontrol.sh'
+    dbus = os.path.join(xdef.codedir, 'dbuscontrol.sh')
 
 def setAct(act, val):
 
