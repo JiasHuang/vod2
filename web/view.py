@@ -7,9 +7,10 @@ import xdef
 import xurl
 
 class play_obj:
-    def __init__(self, video):
+    def __init__(self, video, opts=None):
         self.type = 'play'
         self.video = video
+        self.opts = opts
 
 class act_obj:
     def __init__(self, act='', num=''):
@@ -57,6 +58,7 @@ def entry_play(player, v, cookies=None):
     if player:
         opts.append('-p ' + player)
     playURL(v, opts)
+    obj.opts = opts
     return json.dumps(obj.__dict__)
 
 def entry_act(player, a, n):
@@ -74,6 +76,8 @@ def entry_cmd(c):
 
 def entry_extract(v, fmt):
     # FIXME
+    if fmt not in ['bestaudio']:
+        fmt = 'bestvideo'
     cmd = '/usr/local/bin/youtube-dl -q -g -f %s \'%s\'' %(fmt, v)
     url = subprocess.check_output(cmd, shell=True)
     obj = play_obj(url.decode('utf8'))

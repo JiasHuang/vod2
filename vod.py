@@ -3,6 +3,7 @@
 import os
 import re
 import sys
+import argparse
 import traceback
 import ast
 
@@ -10,8 +11,6 @@ import xdef
 import xplay
 import xsrc
 import xurl
-
-from optparse import OptionParser
 
 def cmd_update():
     os.chdir(xdef.codedir)
@@ -38,46 +37,48 @@ def main():
     defs = getSettingDefs()
     os.chdir(xdef.workdir)
 
-    parser = OptionParser()
-    parser.add_option("-p", "--player", dest="player", default=xplay.getPlayer())
-    parser.add_option("-f", "--format", dest="format", default=defs['format']['defs'])
-    parser.add_option("--subtitle", dest="subtitle", default=defs['subtitle']['defs'])
-    parser.add_option("--pagelist", dest="pagelist")
-    parser.add_option("--playbackMode", dest="playbackMode")
-    parser.add_option("--dl-threads", dest="dl_threads")
-    parser.add_option("--dlconf", dest="dlconf", default=defs['dlconf']['defs'])
-    parser.add_option("-a", "--act", dest="act")
-    parser.add_option("-v", "--val", dest="val")
-    parser.add_option("-c", "--cmd", dest="cmd")
-    (opts, args) = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--player', default=xplay.getPlayer())
+    parser.add_argument('-f', '--format', default=defs['format']['defs'])
+    parser.add_argument('--subtitle', default=defs['subtitle']['defs'])
+    parser.add_argument('--pagelist')
+    parser.add_argument('--playbackMode')
+    parser.add_argument('--dl-threads')
+    parser.add_argument('--dlconf', default=defs['dlconf']['defs'])
+    parser.add_argument('-a', '--act')
+    parser.add_argument('-v', '--val')
+    parser.add_argument('-c', '--cmd')
+    args, unparsed = parser.parse_known_args()
 
-    if opts.cmd:
-        handle_cmd(opts.cmd)
+    print('[cmd]\n\t' + ' '.join(sys.argv))
+
+    if args.cmd:
+        handle_cmd(args.cmd)
         return
 
-    if opts.act:
-        xplay.setAct(opts.act, opts.val, opts)
+    if args.act:
+        xplay.setAct(args.act, args.val, args)
         return
 
-    if len(args) >= 1:
-        url = args[0].strip()
+    if len(unparsed) >= 1:
+        url = unparsed[0].strip()
 
-    if len(args) >= 2:
-        ref = args[1].strip()
+    if len(unparsed) >= 2:
+        ref = unparsed[1].strip()
 
-    if opts.dlconf and not opts.dl_threads:
-        for conf in opts.dlconf.split(','):
+    if args.dlconf and not args.dl_threads:
+        for conf in args.dlconf.split(','):
             try:
                 c = conf.split('=')
                 key = c[0].strip()
                 val = c[1].strip()
                 if re.search(re.escape(key), url):
-                    opts.dl_threads = val
+                    args.dl_threads = val
             except:
                 continue
 
     try:
-        xplay.playURL(url, ref or url, opts)
+        xplay.playURL(url, ref or url, args)
         return
     except:
         print(sys.exc_info())

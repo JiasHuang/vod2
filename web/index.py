@@ -19,10 +19,16 @@ def index(req):
 
     s = os.path.join(os.path.dirname(__file__), 'server.py')
     cmd = '%s -o %s -e \'%s\'' %(s, o, q)
+    if 'cookie' in req.headers_in:
+        cmd += ' --cookies \'%s\'' %(req.headers_in['cookie'])
 
     os.system(cmd)
     with open(o, 'r') as fd:
-        req.write(fd.read())
+        txt = fd.read()
+        if len(txt):
+            req.write(txt)
+        else:
+            req.write(cmd)
     os.remove(o)
 
     return

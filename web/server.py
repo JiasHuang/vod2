@@ -40,10 +40,9 @@ def dispatch_request(args, s, cookies=None):
     if s.startswith('c='):
         return view.entry_cmd(s[2:])
     if s.startswith(('v=', 'f=')):
+        if cookies and 'run_as_extractor' in cookies and cookies['run_as_extractor'].value == 'yes':
+            return view.entry_extract(s[2:], cookies['format'].value)
         return view.entry_play(args.player, s[2:], cookies)
-    if s.startswith('e='):
-        qs = s.split('&', 1)
-        return view.entry_extract(qs[1][2:], qs[0][2:])
     if s.startswith('p='):
         return page.entry_page(s[2:])
     if s.startswith('j='):
@@ -141,6 +140,7 @@ def main():
     parser.add_argument('-v', '--verbose', type=str2bool, nargs='?', const=True, default=False)
     parser.add_argument('-e', '--eval')
     parser.add_argument('-o', '--output')
+    parser.add_argument('--cookies')
     args = parser.parse_args()
 
     if args.eval and args.output:
@@ -150,7 +150,8 @@ def main():
         else:
             xdef.vod = 'DISPLAY=:0 ' + xdef.vod
         with open(args.output, 'w') as fd:
-            fd.write(eval('dispatch_request(args, args.eval)'))
+            cookies = SimpleCookie(args.cookies) if args.cookies else None
+            fd.write(eval('dispatch_request(args, args.eval, cookies)'))
         return
 
     VODServer.args = args

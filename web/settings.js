@@ -30,7 +30,7 @@ var settings = {
     },
     'dlconf' : {
         'type' : 'input',
-        'defs' : 'zuida=4, pangzitv=4, .le.com=4, tiktokvideodown=4, iqiyi=4, gimy=4'
+        'defs' : 'zuida=4,pangzitv=4,.le.com=4,tiktokvideodown=4,iqiyi=4,gimy=4'
     },
     'run_as_extractor' : {
         'type' : 'select',
@@ -40,7 +40,7 @@ var settings = {
 
 };
 
-var settings_cookies = ['format', 'subtitle', 'dlconf'];
+var settings_cookies = ['format', 'subtitle', 'dlconf', 'run_as_extractor'];
 
 function initCookies() {
   var lists = settings_cookies;

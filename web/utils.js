@@ -207,10 +207,7 @@ function result_page(obj) {
     text += '<div class="imageWrapper">';
     text += '<div class="imageContainer">';
     if (e.video == true) {
-      if (localStorage.getItem("run_as_extractor") != 'no')
-        link_attr = String.format('href="index.html?e={0}&v={1}" target="playVideo"', localStorage.getItem("format"), e.link);
-      else
-        link_attr = String.format('href="index.html?v={0}" target="playVideo"', e.link);
+      link_attr = String.format('href="index.html?v={0}" target="playVideo"', e.link);
       if (e.image)
         img_attr = String.format('src="{0}" onerror=\'this.onerror=null; this.src="icons/Movies-icon.png"\'', e.image);
       else
