@@ -74,6 +74,15 @@ def extract_youtube_playlists(url):
     data = parseYoutubeInitialDataJSON(url)
     objs = []
     if data:
+        for x in findItem(data, ['playlistRenderer']):
+            try:
+                playlistId = x['playlistId']
+                link = 'https://www.youtube.com/playlist?list='+playlistId
+                title = x['title']['simpleText']
+                image = x['thumbnails'][0]['thumbnails'][0]['url']
+                objs.append(entryObj(link, title, image, 'Playlist', False))
+            except:
+                print('Exception:\n'+str(x))
         for x in findItem(data, ['gridPlaylistRenderer']):
             try:
                 playlistId = x['playlistId']
@@ -89,18 +98,30 @@ def extract_youtube_playlists(url):
 def extract_youtube_playlistVideo(url):
     data = parseYoutubeInitialDataJSON(url)
     objs = []
+    channels = False
     if data:
+        for x in findItem(data, ['playlistMetadataRenderer']):
+            if x['title'] == '@channels':
+                channels = True
         for x in findItem(data, ['playlistVideoRenderer']):
             try:
                 videoId = x['videoId']
-                link = 'https://www.youtube.com/watch?v='+videoId
-                title = x['title']['runs'][0]['text']
-                image = 'http://img.youtube.com/vi/%s/0.jpg' %(videoId)
-                desc = None
-                for timeStatus in findItem(x, ['thumbnailOverlayTimeStatusRenderer']):
-                    if 'simpleText' in timeStatus['text']:
-                        desc = timeStatus['text']['simpleText']
-                objs.append(entryObj(link, title, image, desc))
+                if channels:
+                    browseId = x['shortBylineText']['runs'][0]['navigationEndpoint']['browseEndpoint']['browseId']
+                    link = 'https://www.youtube.com/channel/' + browseId
+                    title = x['shortBylineText']['runs'][0]['text']
+                    image = 'http://img.youtube.com/vi/%s/0.jpg' %(videoId)
+                    desc = 'Channel'
+                    objs.append(entryObj(link, title, image, desc, False))
+                else:
+                    link = 'https://www.youtube.com/watch?v='+videoId
+                    title = x['title']['runs'][0]['text']
+                    image = 'http://img.youtube.com/vi/%s/0.jpg' %(videoId)
+                    desc = None
+                    for timeStatus in findItem(x, ['thumbnailOverlayTimeStatusRenderer']):
+                        if 'simpleText' in timeStatus['text']:
+                            desc = timeStatus['text']['simpleText']
+                    objs.append(entryObj(link, title, image, desc))
             except:
                 print('Exception:\n'+str(x))
 
