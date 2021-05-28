@@ -43,7 +43,7 @@ function onPlayVideo() {
 }
 
 function onSearchReady() {
-    $( "a[target='playVideo']" ).click(onPlayVideo);
+    $( "a[meta='playVideo']" ).click(onPlayVideo);
     $('#loadingMessage').hide();
 }
 

@@ -76,7 +76,7 @@ function onPageReady() {
         $('#result').initSlide({divGroup:entryMax, slideIndexBox:'slideIndexBox'});
     }
 
-    $( "a[target='playVideo']" ).click(onPlayVideo);
+    $( "a[meta='playVideo']" ).click(onPlayVideo);
     $('#loadingMessage').hide();
 }
 
