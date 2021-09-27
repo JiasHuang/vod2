@@ -13,10 +13,10 @@ def getSource(url, fmt, ref):
             txt = xurl.load(url)
             m = re.search(r'base64decode\(\'([^\']*)', txt)
             code = m.group(1)
-            decoded = xurl.unquote(base64.b64decode(code))
-            print('\n[pangzitv][DBG][decoded]\n\n\t%s' %(decoded))
+            decoded = xurl.unquote(base64.b64decode(code).decode('utf8'))
             # process unicode special character
-            decoded = decoded.replace('%u','\\u').decode('unicode_escape')
+            decoded = decoded.replace('%u','\\u').encode().decode('unicode_escape')
+            print('\n[pangzitv][DBG][decoded]\n\n\t%s' %(decoded))
             urls = []
             for m in re.finditer(r'http[^#$\n]*', decoded):
                 urls.append(m.group())
