@@ -3,13 +3,13 @@ import re
 import xurl
 from .utils import *
 
-VALID_URL = r'pianku\.tv'
+VALID_URL = r'pianku'
 
 def extract(url):
     objs = []
     basename = url.split('/')[-1]
     if len(basename) == 15:
-        url_tv = 'https://www.pianku.tv/ajax/downurl/%s_tv/' %(basename[0:10])
+        url_tv = 'https://www.mypianku.net/ajax/downurl/%s_tv/' %(basename[0:10])
         local_cookie = xurl.genLocal(url, suffix='.cookie')
         opts = []
         opts.append('-c %s' %(local_cookie))
@@ -23,7 +23,7 @@ def extract(url):
             link, title = urljoin(url, m.group(1)), m.group(2)
             objs.append(entryObj(link, title))
     else:
-        for m in re.finditer(r'<a href="(.*?)" title="(.*?)" target="_blank"><img src=".*?"\s+data-funlazy="(.*?)"', load(url)):
+        for m in re.finditer(r'<a href="(.*?)" title="(.*?)" target="_blank"><img src=".*?"\s+data-src="(.*?)"', load(url)):
             link, title, img = urljoin(url, m.group(1)), m.group(2), urljoin(url, m.group(3))
             objs.append(pageObj(link, title, img))
 
