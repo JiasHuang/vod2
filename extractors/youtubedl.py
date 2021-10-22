@@ -9,15 +9,9 @@ import xurl
 import xproc
 
 class defvals:
+    cmd = 'yt-dlp'
     ytdlsub  = '--no-warnings --write-sub --skip-download --sub-lang=en,en-US'
     ua = xurl.defvals.ua
-
-def ytdlcmd():
-    if os.path.exists('/usr/bin/python3'):
-        for f in ['/usr/local/bin/youtube-dl', os.path.expanduser('~/bin/youtube-dl')]:
-            if os.path.exists(f):
-                return 'python3 ' + f
-    return 'youtube-dl'
 
 def redirectURL(url):
     if re.search(r'youku', url):
@@ -119,7 +113,7 @@ def extractURL(url, fmt, key=None, ref=None, dontParseJson=False):
             return local
         return parseJson(local)
 
-    cmd = '%s -f \'%s\' --user-agent \'%s\' %s \'%s\' > %s' %(ytdlcmd(), fmt, defvals.ua, arg, url, local)
+    cmd = '%s -f \'%s\' --user-agent \'%s\' %s \'%s\' > %s' %(defvals.cmd, fmt, defvals.ua, arg, url, local)
 
     try:
         start_time = timeit.default_timer()
@@ -154,7 +148,7 @@ def extractSUB(url, subtitle=None):
         opt = ''
         if subtitle == 'auto-generated':
             opt += '--write-auto-sub '
-        cmd = '%s %s %s -o %s \'%s\'' %(ytdlcmd(), defvals.ytdlsub, opt, sub, url)
+        cmd = '%s %s %s -o %s \'%s\'' %(defvals.cmd, defvals.ytdlsub, opt, sub, url)
 
         start_time = timeit.default_timer()
         output = xproc.checkOutput(cmd)
