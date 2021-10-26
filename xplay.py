@@ -84,7 +84,7 @@ def playURL(url, ref, opts):
         while url != None:
             nextURL = getNext(url, playlist)
             if nextURL:
-                p = Process(target=xsrc.getSource, args=(opts.format, nextURL,))
+                p = Process(target=xsrc.getSource, args=(nextURL, opts.format))
                 p.start()
                 playURL_core(url, ref, opts)
                 p.join()
@@ -124,7 +124,7 @@ def setAct(act, val, opts):
             nextURL = nextLine(playing, playlist)
             if nextURL:
                 if os.fork() == 0:
-                    xsrc.getSource(nextURL)
+                    xsrc.getSource(nextURL, opts.format)
         return
 
     player = players.player(opts.player)

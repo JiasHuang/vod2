@@ -1,6 +1,6 @@
 import extractors
 
-def getSource(url, fmt, ref):
+def getSource(url, fmt, ref=None):
 
     src = None
     cookies = None
