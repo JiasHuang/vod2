@@ -61,7 +61,7 @@ function setAct(act, num='') {
       dataType: 'json',
       error: onTimeout,
       success: parseJSON,
-      timeout: 20000
+      timeout: 30000
     });
 }
 
@@ -115,7 +115,7 @@ function updateResult() {
       dataType: 'json',
       error: onTimeout,
       success: parseJSON,
-      timeout: 20000
+      timeout: 30000
     });
   }
 }

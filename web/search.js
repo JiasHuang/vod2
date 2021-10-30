@@ -22,7 +22,7 @@ function query(s, q) {
           dataType: 'json',
           error: onTimeout,
           success: parseJSON,
-          timeout: 20000
+          timeout: 30000
         });
     }
     else {

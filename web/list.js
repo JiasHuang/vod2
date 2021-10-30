@@ -96,6 +96,6 @@ function onDocumentReady() {
     dataType: 'json',
     error: onTimeout,
     success: parseJSON,
-    timeout: 20000
+    timeout: 30000
   });
 }
