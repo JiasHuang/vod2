@@ -8,7 +8,7 @@
 
 ## Requirements
 
-- youtubedl
+- yt-dlp
 - sudo apt install nodejs curl
 - xdotool (Optional. For ffplay)
 - livestreamer (Optional. For omxplayer)
@@ -52,7 +52,7 @@ num + ⏮  | seek -num secs
 
 ### Installation on Raspberry Pi
 
-- Install youtube-dl
+- Install yt-dlp
 - Install livestreamer
 	```
 	sudo apt install livestreamer

@@ -74,7 +74,7 @@ def genName(name, suffix, sn):
 
 def dl(url, options):
     if options.execute == 'ytdl':
-        cmd = 'youtube-dl \'%s\'' %(url)
+        cmd = 'yt-dlp \'%s\'' %(url)
         return subprocess.Popen(cmd, shell=True)
     elif options.execute == 'ffmpeg':
         src, cookie, ref = xsrc.getSource(url)
