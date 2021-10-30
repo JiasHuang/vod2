@@ -234,7 +234,10 @@ function result_page(obj) {
 
 function result_play(obj) {
   var text = '';
-  text += String.format('<h2>{0} <a href="{1}" target="_blank">{1}</a></h2>', getLangLog('playing'), obj.video);
+  if (getCookie('run_as_extractor') == 'yes' && getCookie('format') == 'bestaudio')
+    text += String.format('<audio controls autoplay><source src="{0}" type="audio/mpeg"></audio>', obj.video);
+  else
+    text += String.format('<h2>{0} <a href="{1}" target="_blank">{1}</a></h2>', getLangLog('playing'), obj.video);
   return text;
 }
 

@@ -78,7 +78,7 @@ def entry_extract(v, fmt):
     # FIXME
     if fmt not in ['bestaudio']:
         fmt = 'bestvideo'
-    cmd = '/usr/local/bin/youtube-dl -q -g -f %s \'%s\'' %(fmt, v)
+    cmd = 'yt-dlp -q -g -f %s \'%s\'' %(fmt, v)
     url = subprocess.check_output(cmd, shell=True)
     obj = play_obj(url.decode('utf8'))
     return json.dumps(obj.__dict__)
