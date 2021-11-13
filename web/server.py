@@ -56,7 +56,8 @@ def dispatch_request(args, s, cookies=None):
         m = re.search(r'q=([^&]*)&s=(.*)', s)
         return page.entry_search(m.group(1), m.group(2))
     if s.startswith('d='):
-        return page.entry_dir(s[2:])
+        d = unquote_plus(s[2:])
+        return page.entry_dir(d)
     print('FAILED TO DISPATCH ' + s)
     return None
  
