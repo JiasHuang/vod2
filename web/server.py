@@ -39,10 +39,13 @@ def dispatch_request(args, s, cookies=None):
         return view.entry_act(args.player, m.group(1), m.group(2))
     if s.startswith('c='):
         return view.entry_cmd(s[2:])
-    if s.startswith(('v=', 'f=')):
+    if s.startswith('v='):
         if cookies and 'run_as_extractor' in cookies and cookies['run_as_extractor'].value == 'yes':
             return view.entry_extract(s[2:], cookies['format'].value)
         return view.entry_play(args.player, s[2:], cookies)
+    if s.startswith('f='):
+        f = unquote_plus(s[2:])
+        return view.entry_play(args.player, f)
     if s.startswith('p='):
         return page.entry_page(s[2:])
     if s.startswith('j='):
