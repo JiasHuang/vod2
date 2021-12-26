@@ -16,6 +16,8 @@ def isM3U(url):
     if len(parsed.netloc) > 0:
         if xurl.getContentType(url).lower() in ['application/vnd.apple.mpegurl', 'application/x-mpegurl']:
             return True
+        if parsed.path.endswith('/index.m3u8'):
+            return True
     elif os.path.exists(url):
         if re.search(r'#EXTM3U', xurl.readLocal(url)):
             return True
@@ -153,7 +155,7 @@ def createJobs(url, dldir, jobs):
         waitM3U8Ready(local, verbose = True)
         return local
 
-    print('createJobs fail')
+    print('createJobs fail : {}'.format(url))
     return None
 
 def main():

@@ -10,7 +10,7 @@ import xproc
 
 class defvals:
     prog = 'mpv'
-    args = '--fs --ontop --ytdl=no --demuxer-lavf-o=protocol_whitelist=\\"file,http,https,tcp,tls,crypto\\" --input-file=%s --save-position-on-quit' %(xdef.fifo)
+    args = '--fs --ontop --ytdl=no --demuxer-lavf-o=protocol_whitelist=\\"file,http,https,tcp,tls,crypto\\",allowed_extensions=ALL --input-file=%s --save-position-on-quit' %(xdef.fifo)
 
 def setAct(act, val):
     if act == 'forward' and val:
