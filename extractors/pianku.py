@@ -2,7 +2,7 @@ import re
 
 import xurl
 
-VALID_URL = r'pianku'
+VALID_URL = r'pkmp4'
 
 def getSource(url, fmt, ref):
     txt = xurl.load(url)
