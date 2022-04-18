@@ -2,10 +2,10 @@ import re
 
 import xurl
 
-VALID_URL = r'pianku\.tv'
+VALID_URL = r'pianku'
 
 def getSource(url, fmt, ref):
     txt = xurl.load(url)
-    m = re.search(r'geturl\(\'(.*?)\'\)', txt)
-    return m.group(1) if m else None
+    m = re.search(r'"url":"(.*?)","url_next":"(.*?)"', txt)
+    return m.group(1).replace('\\', '') if m else None
 
