@@ -68,7 +68,7 @@ def parseJson(path):
         encoded = re.search(r'data:application/vnd.apple.mpegurl;base64,([a-zA-Z0-9+/=]*)', urls)
         if encoded:
             local = xurl.genLocal(path, prefix='vod_list_', suffix='.m3u')
-            decoded = base64.b64decode(encoded.group(1))
+            decoded = base64.b64decode(encoded.group(1)).decode('utf8')
             xurl.saveLocal(local, decoded)
             results.append(local)
         else:
