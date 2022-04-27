@@ -4,7 +4,7 @@ import subprocess
 
 import xurl
 
-VALID_URL = r'iqiyi\.com'
+VALID_URL = r'iq\.com'
 
 def loadM3U8(url):
     txt = xurl.load(url)
@@ -35,7 +35,7 @@ def loadM3U8(url):
 def getDashURL(url):
     cmd = 'google-chrome-stable --headless --disable-gpu --enable-logging --v=1 \'%s\'' %(url)
     output = subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True).decode('utf8')
-    m = re.search(r'https://cache.video.iqiyi.com/dash.*', output)
+    m = re.search(r'https://cache.video.iq.com/dash.*', output)
     if m:
         return m.group(0)
     return None

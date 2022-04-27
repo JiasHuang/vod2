@@ -1,41 +1,25 @@
 import re
 import string
+import json
 
 import xurl
 from .utils import *
 
-VALID_URL = r'iqiyi'
+VALID_URL = r'iq\.com'
 
 def extract(url):
     objs = []
-    if re.search(r'list.', url):
-        category = re.search(r'www/(\d+)/', url) or 'err'
-        category = category.group(1) if category else None
-        pages = []
-        pages.append(url)
-        for m in re.finditer(r'<a data-key.*? href="([^"]*)"', load(url), re.DOTALL):
-            page = urljoin(url, m.group(1))
-            if page not in pages:
-                pages.append(page)
-        for page in pages[0:5]:
-            for m in re.finditer(r'<div class="plist-item">(.*?)<p class="pic-sub-title">', load(page), re.DOTALL|re.MULTILINE):
-                link = re.search(r'href="([^"]*)"', m.group(1))
-                link = link.group(1) if link else None
-                title = re.search(r'<a class="pic-title".*?>(.*?)</a>', m.group(1))
-                title = title.group(1) if title else None
-                image = re.search(r'v-i71-anim-img="\'([^\']*)\'"', m.group(1))
-                image = image.group(1) if image else None
-                if link and title and image:
-                    link, image = urljoin(page, link, image)
-                    objs.append(entryObj(link, title, image, video=(category == '1')))
+    if re.search(r'albumList?', url):
+        data = json.loads(load(url))
+        for x in data['data']['epg']:
+            link = 'https://www.iq.com/play/' + x['albumLocSuffix']
+            image = x['albumPic']
+            title = x['name']
+            objs.append(pageObj(link, title, image))
     else:
-        m = re.search(r'album-page="([^"]*)"', load(url))
-        if m:
-            albumPage = urljoin(url, m.group(1))
-            for m in re.finditer(r'"name":"([^"]*)","url":"([^"]*)","imageUrl":"([^"]*)"', load(albumPage)):
-                title, link, image = m.group(1), m.group(2), m.group(3)
-                link, image = urljoin(url, link, image)
-                objs.append(entryObj(link, title, image))
+        for m in re.finditer(r'class="drama-item" href="(.*?)" title="(.*?)"', load(url)):
+            link, title = urljoin(url, m.group(1)), m.group(2)
+            objs.append(entryObj(link, title))
 
     return objs
 
