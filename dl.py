@@ -5,16 +5,15 @@ import re
 import subprocess
 import time
 import hashlib
+import argparse
 
 import xurl
 import xsrc
 
-from optparse import OptionParser
-
 def isM3U(url):
     parsed = xurl.urlparse(url)
     if len(parsed.netloc) > 0:
-        if xurl.getContentType(url).lower() in ['application/vnd.apple.mpegurl', 'application/x-mpegurl']:
+        if xurl.getContentType(url).lower() in ['application/vnd.apple.mpegurl', 'application/x-mpegurl', 'audio/x-mpegurl']:
             return True
         if parsed.path.endswith('/index.m3u8'):
             return True
@@ -74,31 +73,31 @@ def genName(name, suffix, sn):
         i += 1
     return '%s_%03d.%s' %(name, i, suffix)
 
-def dl(url, options):
-    if options.execute == 'ytdl':
+def dl(url, args):
+    if args.execute == 'ytdl':
         cmd = 'yt-dlp \'%s\'' %(url)
         return subprocess.Popen(cmd, shell=True)
-    elif options.execute == 'ffmpeg':
+    elif args.execute == 'ffmpeg':
         src, cookie, ref = xsrc.getSource(url)
-        local = genName(options.name, options.type, options.sn)
+        local = genName(args.name, args.type, args.sn)
         cmd = 'ffmpeg -i \'%s\' -vcodec copy -acodec copy %s' %(src, local)
         return subprocess.Popen(cmd, shell=True)
-    elif options.execute == 'wget':
+    elif args.execute == 'wget':
         basename = os.path.basename(xurl.urlparse(url).path)
         cmd = 'wget -qc -o /dev/null -O %s \'%s\'' %(basename, url)
         return subprocess.Popen(cmd, shell=True)
-    elif options.execute == 'curl':
+    elif args.execute == 'curl':
         basename = os.path.basename(xurl.urlparse(url).path)
         cmd = 'curl -kLs -C - -o %s \'%s\'' %(basename, url)
         return subprocess.Popen(cmd, shell=True)
-    elif options.cmd:
-        cmd = '%s \'%s\'' %(options.cmd, url)
+    elif args.cmd:
+        cmd = '%s \'%s\'' %(args.cmd, url)
         return subprocess.Popen(cmd, shell=True)
     else:
         return None
 
-def waitJobs(procs, options):
-    while len(procs) >= int(options.jobs):
+def waitJobs(procs, args):
+    while len(procs) >= int(args.jobs):
         time.sleep(0.1)
         for p in procs:
             if p.poll() != None:
@@ -131,7 +130,7 @@ def waitM3U8Ready(local, min_dls = 4, min_dlsz = 10485760, verbose = False):
             break
         time.sleep(2)
 
-def createJobs(url, dldir, jobs):
+def createJobs(url, dldir, jobs, wait_complete=False):
     prog = os.path.realpath(__file__)
     if prog.endswith('.pyc'):
         prog = prog[:-1]
@@ -152,46 +151,66 @@ def createJobs(url, dldir, jobs):
                 prog, url, dldir, flt, jobs)
         p = subprocess.Popen(cmd, shell=True)
         print('create download process %s' %(p.pid))
-        waitM3U8Ready(local, verbose = True)
+        if wait_complete:
+            p.communicate()
+        else:
+            waitM3U8Ready(local, verbose = True)
         return local
 
     print('createJobs fail : {}'.format(url))
     return None
 
+
+def dl_m3u8(url, dldir, jobs, out):
+    if not os.path.exists(dldir):
+        os.makedirs(dldir)
+        url = createJobs(url, dldir, jobs, True)
+    if out:
+        os.system('ffmpeg -i {} -c copy {}'.format(url, out))
+    return
+
 def main():
 
-    parser = OptionParser()
-    parser.add_option("-i", "--input", dest="input", action='append')
-    parser.add_option("-c", "--chdir", dest="chdir")
-    parser.add_option("-f", "--filter", dest="filter", action='append')
-    parser.add_option("-s", "--sort", dest="sort", action='append')
-    parser.add_option("-x", "--execute", dest="execute")
-    parser.add_option("-j", "--jobs", dest="jobs", default='1')
-    parser.add_option("-n", "--name", dest="name", default='dl')
-    parser.add_option("-t", "--type", dest="type", default='mp4')
-    parser.add_option("--sn", dest="sn", default='1')
-    parser.add_option("--cmd", dest="cmd")
-    (options, args) = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', action='append', default=[])
+    parser.add_argument('-o', '--output')
+    parser.add_argument('-c', '--chdir', dest="chdir")
+    parser.add_argument('-f', '--filter', dest="filter", action='append', default=[])
+    parser.add_argument('-s', '--sort', dest="sort", action='append', default=[])
+    parser.add_argument('-x', '--execute', dest="execute")
+    parser.add_argument('-j', '--jobs', dest="jobs", default=1, type=int)
+    parser.add_argument('-n', '--name', dest="name", default='dl')
+    parser.add_argument('-t', '--type', dest="type", default='mp4')
+    parser.add_argument('--sn', default='1')
+    parser.add_argument('--cmd')
+    parser.add_argument('--m3u8', action='store_true', default=False)
+    args, unparsed = parser.parse_known_args()
 
-    if options.chdir:
-        os.chdir(options.chdir)
+    if args.m3u8:
+        for url in args.input:
+            dldir = args.chdir or 'dldir_' + hashlib.md5(url.encode('utf8')).hexdigest()
+            dl_m3u8(url, dldir, max(args.jobs, 4), args.output)
+        return
 
-    results = options.input
+    if args.chdir:
+        os.chdir(args.chdir)
+
+    results = args.input
     results_next = []
     procs = []
-    for i in range(len(options.filter)):
+    for i in range(len(args.filter)):
         for x in results:
-            results_next.extend(filter(x, options.filter[i]))
-        if options.sort and str(i) in options.sort:
+            results_next.extend(filter(x, args.filter[i]))
+        if args.sort and str(i) in args.sort:
             results_next.sort()
         results = results_next
         results_next = []
 
     for x in results:
-        p = dl(x, options)
+        p = dl(x, args)
         if p:
             procs.append(p)
-            procs = waitJobs(procs, options)
+            procs = waitJobs(procs, args)
 
     for p in procs:
         p.communicate()
