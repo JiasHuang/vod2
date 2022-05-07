@@ -37,7 +37,7 @@ def sendACT(act, num, opts):
 
 def getOptionsByCookies(cookies):
     opts = []
-    for key in ['format', 'subtitle', 'pagelist', 'dlconf']:
+    for key in ['format', 'subtitle', 'pagelist', 'dlconf', 'playbackMode']:
         if key in cookies:
             opts.append('--%s \'%s\'' %(key, cookies[key].value))
     return opts

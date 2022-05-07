@@ -76,6 +76,7 @@ function setPlaybackMode (mode) {
         playbackMode = 'Normal';
     else
         playbackMode = mode;
+    saveCookie('playbackMode', playbackMode);
     setAct('playbackMode', playbackMode);
     highlightPlaybackMode(playbackMode);
 }
