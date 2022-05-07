@@ -11,7 +11,7 @@ def extract(url):
     if url.endswith(('/jp/', '/kr/', '/cn/', '/tw/', '/th/')):
         txt = load(url)
         for m in re.finditer(r'<a href="(.*?)">(.*?)</a>', txt, re.DOTALL | re.MULTILINE):
-            if not re.search(r'\d+/$', m.group(1)):
+            if not re.search(r'\d+\w*/$', m.group(1)):
                 continue
             link = urljoin(url, m.group(1))
             img = re.search(r'background-image: url\((.*?)\)', m.group(2))
