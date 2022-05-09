@@ -10,9 +10,8 @@
 <link rel="stylesheet" href="panel.css">
 
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script type="text/javascript" src="panel.js"></script>
-<script type="text/javascript" src="speech.js"></script>
-<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="panel.js?v=20220509"></script>
+<script type="text/javascript" src="utils.js?v=20220509"></script>
 
 <script type="text/javascript">
   $(document).ready(onDocumentReady);
@@ -72,7 +71,6 @@
 
     <div id="more" style="display: none;">
       <img src="icons/Close-icon.png" onclick="showStuff('btn_more', 'more')" />
-      <br><br><img src="icons/mic-icon.png" onload="loadImage()" onclick="startDictation()" id="ximage" />
       <br><br><table>
       <tr>
           <td class="btn" id="btn_autoNext" onclick="setPlaybackMode('AutoNext')"><span class="menubtn" id="autoNext"></span></td>

@@ -17,7 +17,7 @@ function showResults() {
             text += '<a href="'+pages[i].plink+'">'+pages[i].ptitle+'</a>  /  ';
         }
         text += '<a href="'+pages[i].link+'">'+pages[i].title+'</a>';
-        text += '<img src="trash-icon-32.png" onclick="onTrash('+i+');" />';
+        text += '<img src="icons/trash-icon-32.png" onclick="onTrash('+i+');" />';
         text += '</td></tr>'
     }
     text += '</table>'
