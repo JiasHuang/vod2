@@ -2,7 +2,7 @@ import re
 
 import xurl
 
-VALID_URL = r'tiktokvideodown\.com'
+VALID_URL = r'188mov'
 
 def getSource(url, fmt, ref):
     if re.search(r'vod-play-id', url):
