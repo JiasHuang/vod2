@@ -23,4 +23,9 @@ def extract(url):
             title = d['fsNAME']
             image = d['fsHEAD_FRAME']
             objs.append(entryObj(link, title, image))
+    else:
+        for m in re.finditer(r'<a href=\'([^\']*)\' title=\'([^\']*)\'>', load(url)):
+            link = urljoin(url, m.group(1))
+            title = m.group(2)
+            objs.append(entryObj(link, title))
     return objs
