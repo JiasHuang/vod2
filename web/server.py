@@ -17,6 +17,16 @@ import xurl
 class defvals:
     section = 'VODServer'
 
+def get_m3u_txt():
+    out_extract = '/tmp/out_extract'
+    txt = []
+    txt.append('#EXTM3U')
+    txt.append('#EXT-X-STREAM-INF')
+    if os.path.exists(out_extract):
+        with open(out_extract, 'r') as fd:
+            txt.append(fd.read())
+    return '\n'.join(txt)
+
 def get_redirect_location(post_data):
     i = unquote_plus(post_data.decode('utf8'))[2:]
     x = quote(i)
@@ -58,6 +68,8 @@ def dispatch_request(args, s, cookies=None):
     if s.startswith('d='):
         d = unquote_plus(s[2:])
         return page.entry_dir(d)
+    if s == 'm3u':
+        return get_m3u_txt()
     print('FAILED TO DISPATCH ' + s)
     return None
  
@@ -78,18 +90,11 @@ class VODServer(BaseHTTPRequestHandler):
             self.send_header('Location', 'index.html')
             self.end_headers()
             return
-        if self.path == '/m':
-            out_extract = '/tmp/out_extract'
-            if os.path.exists(out_extract):
-                with open(out_extract, 'r') as fd:
-                    self.send_response(200)
-                    self.send_header('Content-type', "text/html")
-                    self.end_headers()
-                    txt = []
-                    txt.append('#EXTM3U')
-                    txt.append('#EXT-X-STREAM-INF')
-                    txt.append(fd.read())
-                    self.wfile.write(bytes('\n'.join(txt), 'utf8'))
+        if self.path == '/m3u':
+            self.send_response(200)
+            self.send_header('Content-type', "text/html")
+            self.end_headers()
+            self.wfile.write(bytes(get_m3u_txt(), 'utf8'))
             return
         p = urlparse(self.path)
         if p.path.endswith('.py'):
