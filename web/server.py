@@ -41,7 +41,7 @@ def dispatch_request(args, s, cookies=None):
         return view.entry_cmd(s[2:])
     if s.startswith('v='):
         if cookies and 'run_as_extractor' in cookies and cookies['run_as_extractor'].value == 'yes':
-            return view.entry_extract(s[2:], cookies['format'].value)
+            return view.entry_extract(s[2:], cookies)
         return view.entry_play(args.player, s[2:], cookies)
     if s.startswith('f='):
         f = unquote_plus(s[2:])
@@ -77,6 +77,19 @@ class VODServer(BaseHTTPRequestHandler):
             self.send_response(302)
             self.send_header('Location', 'index.html')
             self.end_headers()
+            return
+        if self.path == '/m':
+            out_extract = '/tmp/out_extract'
+            if os.path.exists(out_extract):
+                with open(out_extract, 'r') as fd:
+                    self.send_response(200)
+                    self.send_header('Content-type', "text/html")
+                    self.end_headers()
+                    txt = []
+                    txt.append('#EXTM3U')
+                    txt.append('#EXT-X-STREAM-INF')
+                    txt.append(fd.read())
+                    self.wfile.write(bytes('\n'.join(txt), 'utf8'))
             return
         p = urlparse(self.path)
         if p.path.endswith('.py'):

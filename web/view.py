@@ -27,9 +27,11 @@ def runCmd(cmd):
     cmd = '%s -c %s' %(xdef.vod, cmd)
     subprocess.Popen(cmd, shell=True)
 
-def playURL(url, opts=[]):
+def playURL(url, opts=[], wait_complete=False):
     cmd = '%s %s \'%s\'' %(xdef.vod, ' '.join(opts), url)
-    subprocess.Popen(cmd, shell=True)
+    p = subprocess.Popen(cmd, shell=True)
+    if wait_complete:
+        p.communicate()
 
 def sendACT(act, num, opts):
     cmd = '%s %s -a \'%s\' -v \'%s\'' %(xdef.vod, ' '.join(opts), act, num)
@@ -74,11 +76,15 @@ def entry_cmd(c):
     obj = cmd_obj(status)
     return json.dumps(obj.__dict__)
 
-def entry_extract(v, fmt):
-    # FIXME
-    if fmt not in ['bestaudio']:
-        fmt = 'bestvideo'
-    cmd = 'yt-dlp -q -g -f %s \'%s\'' %(fmt, v)
-    url = subprocess.check_output(cmd, shell=True)
-    obj = play_obj(url.decode('utf8'))
-    return json.dumps(obj.__dict__)
+def entry_extract(v, cookies):
+    out_extract = '/tmp/out_extract'
+    opts = []
+    opts.append('--player dbg')
+    opts.append('--out_extract ' + out_extract)
+    opts.append('--format ' + cookies['format'].value)
+    playURL(v, opts, True)
+    with open(out_extract, 'r') as fd:
+        obj = play_obj(fd.read())
+        return json.dumps(obj.__dict__)
+    return None
+

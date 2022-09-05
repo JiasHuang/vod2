@@ -48,6 +48,7 @@ def main():
     parser.add_argument('-a', '--act')
     parser.add_argument('-v', '--val')
     parser.add_argument('-c', '--cmd')
+    parser.add_argument('-o', '--out_extract')
     args, unparsed = parser.parse_known_args()
 
     print('[cmd]\n\t' + ' '.join(sys.argv))
