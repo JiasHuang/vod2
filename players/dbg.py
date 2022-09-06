@@ -5,27 +5,29 @@ import xurl
 import xsrc
 
 class defvals:
-    exe_out_extract = os.path.expanduser('~/bin/exe_out_extract')
+    forward_url = os.path.expanduser('~/bin/forward-url')
     exclude_list = [r'youtube']
 
 def setAct(act, val):
     return
 
-def get_source(url, ref, opts):
-    if opts.format != 'bestaudio':
-        for p in defvals.exclude_list:
+def get_source(url, ref, opts, exclude_list):
+    if exclude_list:
+        for p in exclude_list:
             if re.search(p, url):
                 return url, None, ref
     return xsrc.getSource(url, opts.format, ref)
 
 def play(url, ref, opts):
-    url, cookies, ref = get_source(url, ref, opts)
+    is_video = opts.format != 'bestaudio'
+    exclude_list = defvals.exclude_list if is_video else None
+    url, cookies, ref = get_source(url, ref, opts, exclude_list)
     print('[dbg] url {}'.format(url))
     print('[dbg] ref {}'.format(ref))
     if opts.out_extract:
         xurl.saveLocal(opts.out_extract, url)
-    if os.path.exists(defvals.exe_out_extract):
-        os.system('{} {}'.format(defvals.exe_out_extract, url))
+    if os.path.exists(defvals.forward_url) and is_video:
+        os.system('{} {}'.format(defvals.forward_url, url))
     return
 
 def isRunning():
