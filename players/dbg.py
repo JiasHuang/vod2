@@ -4,7 +4,7 @@ import re
 import xurl
 import xsrc
 
-def defvals:
+class defvals:
     exe_out_extract = os.path.expanduser('~/bin/exe_out_extract')
 
 def setAct(act, val):
