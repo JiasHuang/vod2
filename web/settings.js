@@ -45,7 +45,7 @@ var settings_cookies = ['format', 'subtitle', 'dlconf', 'run_as_extractor'];
 function initCookies() {
   var lists = settings_cookies;
   for (let i=0; i<lists.length; i++) {
-    saveCookie(lists[i], getValue(lists[i]));
+    saveCookie(lists[i], getValue(lists[i]), 3650);
   }
 }
 
@@ -59,7 +59,7 @@ function delCookies() {
 function saveCookies() {
     var lists = settings_cookies;
     for (var i=0; i<lists.length; i++) {
-        saveCookie(lists[i], $('#'+lists[i]).val());
+        saveCookie(lists[i], $('#'+lists[i]).val(), 3650);
     }
 }
 

@@ -42,15 +42,14 @@ String.format = function() {
   return s;
 }
 
-function getExpire() {
-    var expire_days = 1;
+function getExpire(expire_days) {
     var d = new Date();
     d.setTime(d.getTime() + (expire_days * 24 * 60 * 60 * 1000));
     return 'expires='+d.toGMTString();
 }
 
-function saveCookie(name, value) {
-    document.cookie = name+'='+value+';'+getExpire();
+function saveCookie(name, value, expire_days=1) {
+    document.cookie = name+'='+value+';'+getExpire(expire_days);
 }
 
 function delCookie(name) {
