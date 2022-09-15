@@ -43,7 +43,7 @@ def main():
     parser.add_argument('--subtitle', default=defs['subtitle']['defs'])
     parser.add_argument('--pagelist')
     parser.add_argument('--playbackMode')
-    parser.add_argument('--dl-threads')
+    parser.add_argument('--dlthreads', default=-1, type=int)
     parser.add_argument('--dlconf', default=defs['dlconf']['defs'])
     parser.add_argument('-a', '--act')
     parser.add_argument('-v', '--val')
@@ -67,14 +67,14 @@ def main():
     if len(unparsed) >= 2:
         ref = unparsed[1].strip()
 
-    if args.dlconf and not args.dl_threads:
+    if args.dlconf and args.dlthreads == -1:
         for conf in args.dlconf.split(','):
             try:
                 c = conf.split('=')
                 key = c[0].strip()
                 val = c[1].strip()
                 if re.search(re.escape(key), url):
-                    args.dl_threads = val
+                    args.dlthreads = int(val)
             except:
                 continue
 

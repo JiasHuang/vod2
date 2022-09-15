@@ -61,10 +61,9 @@ def playURL_core(url, ref, opts):
     return
 
 def playURL(url, ref, opts):
-
-    if opts.dl_threads:
+    if opts.dlthreads:
         src, cookies, ref = xsrc.getSource(url, opts.format, ref)
-        url = dl.createJobs(src, xdef.dldir, opts.dl_threads)
+        url = dl.createJobs(src, xdef.dldir, opts.dlthreads)
 
     player = players.player(opts.player)
 

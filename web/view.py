@@ -79,7 +79,7 @@ def entry_cmd(c):
 def entry_extract(v, cookies):
     out_extract = '/tmp/out_extract'
     opts = []
-    opts.append('--player dbg')
+    opts.append('--player dbg --dlthreads 0')
     opts.append('--out_extract ' + out_extract)
     opts.append('--format ' + cookies['format'].value)
     playURL(v, opts, True)
