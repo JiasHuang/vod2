@@ -79,7 +79,7 @@ function onTimeout () {
 }
 
 function onDocumentReady() {
-    var jsonURL = '';
+    var jsonURL = 'null';
 
     var bookmark = localStorage.getItem('bookmark');
     if (bookmark && bookmark.length > 0) {

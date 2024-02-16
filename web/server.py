@@ -59,7 +59,7 @@ def dispatch_request(args, s, cookies=None):
     if s.startswith('p='):
         return page.entry_page(s[2:])
     if s.startswith('j='):
-        if s == 'j=':
+        if s == 'j=null':
             return page.entry_json(args.bookmark)
         return page.entry_json(s[2:])
     if s.startswith('q='):
