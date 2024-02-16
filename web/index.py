@@ -22,8 +22,8 @@ def main():
     server = os.path.join(os.path.dirname(__file__), 'server.py')
     cmd = '%s -o %s -e \'%s\'' %(server, tmpf, func_args)
 
-    #if 'cookie' in req.headers_in:
-    #    cmd += ' --cookies \'%s\'' %(req.headers_in['cookie'])
+    if 'HTTP_COOKIE' in os.environ:
+        cmd += ' --cookies \'%s\'' %(os.environ['HTTP_COOKIE'])
 
     os.system(cmd)
     with open(tmpf, 'r') as fd:
