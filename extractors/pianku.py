@@ -2,7 +2,7 @@ import re
 
 import xurl
 
-VALID_URL = r'pkmp4'
+VALID_URL = r'pkmp4|pkmkv'
 
 def getSource(url, fmt, ref):
     txt = xurl.load(url)

@@ -37,10 +37,18 @@ var settings = {
         'vals' : ['yes', 'no'],
         'defs' : 'no'
     },
-
+    'forward_url' : {
+        'type' : 'select',
+        'vals' : ['yes', 'no'],
+        'defs' : 'no'
+    },
+    'forward_url_ip' : {
+        'type' : 'input',
+        'defs' : '192.168.0.101'
+    },
 };
 
-var settings_cookies = ['format', 'subtitle', 'dlconf', 'run_as_extractor'];
+var settings_cookies = ['format', 'subtitle', 'dlconf', 'run_as_extractor', 'forward_url', 'forward_url_ip'];
 
 function initCookies() {
   var lists = settings_cookies;

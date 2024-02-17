@@ -45,6 +45,8 @@ def main():
     parser.add_argument('--playbackMode')
     parser.add_argument('--dlthreads', default=-1, type=int)
     parser.add_argument('--dlconf', default=defs['dlconf']['defs'])
+    parser.add_argument('--forward_url')
+    parser.add_argument('--forward_url_ip')
     parser.add_argument('-a', '--act')
     parser.add_argument('-v', '--val')
     parser.add_argument('-c', '--cmd')

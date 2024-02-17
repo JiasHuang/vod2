@@ -3,7 +3,7 @@ import re
 import xurl
 from .utils import *
 
-VALID_URL = r'pkmp4'
+VALID_URL = r'pkmp4|pkmkv'
 
 def extract(url):
     objs = []

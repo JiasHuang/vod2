@@ -50,6 +50,8 @@ def dispatch_request(args, s, cookies=None):
     if s.startswith('c='):
         return view.entry_cmd(s[2:])
     if s.startswith('v='):
+        if cookies and 'forward_url' in cookies and cookies['forward_url'].value == 'yes':
+            return view.entry_extract(s[2:], cookies)
         if cookies and 'run_as_extractor' in cookies and cookies['run_as_extractor'].value == 'yes':
             return view.entry_extract(s[2:], cookies)
         return view.entry_play(args.player, s[2:], cookies)

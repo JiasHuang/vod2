@@ -4,8 +4,9 @@ import os
 import sys
 
 def main():
-    url = sys.argv[1]
-    os.system('adb connect 192.168.0.101')
+    remote_ip = sys.argv[1]
+    url = sys.argv[2]
+    os.system('adb connect {}'.format(remote_ip))
     if url.startswith('https://www.youtube.com/'):
         os.system('adb shell am start -a android.intent.action.VIEW -d {} --activity-clear-top'.format(url))
     else:

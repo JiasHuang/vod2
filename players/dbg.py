@@ -5,7 +5,7 @@ import xurl
 import xsrc
 
 class defvals:
-    forward_url = os.path.expanduser('~/bin/forward-url')
+    forward_url = os.path.join(os.path.dirname(__file__), 'forward-url.py')
     exclude_list = [r'youtube']
 
 def setAct(act, val):
@@ -26,8 +26,8 @@ def play(url, ref, opts):
     print('[dbg] ref {}'.format(ref))
     if opts.out_extract:
         xurl.saveLocal(opts.out_extract, url)
-    if os.path.exists(defvals.forward_url) and is_video:
-        os.system('{} {}'.format(defvals.forward_url, url))
+    if opts.forward_url == 'yes':
+        os.system('{} {} {}'.format(defvals.forward_url, url))
     return
 
 def isRunning():
