@@ -81,7 +81,8 @@ def entry_extract(v, cookies):
     opts = []
     opts.append('--player dbg --dlthreads 0')
     opts.append('--out_extract ' + out_extract)
-    opts.append('--format ' + cookies['format'].value)
+    for key in ['format', 'forward_url', 'forward_url_ip']:
+        opts.append('--{} {}'.format(key, cookies[key].value))
     playURL(v, opts, True)
     with open(out_extract, 'r') as fd:
         obj = play_obj(fd.read())

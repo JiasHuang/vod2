@@ -5,7 +5,6 @@ import xurl
 import xsrc
 
 class defvals:
-    forward_url = os.path.join(os.path.dirname(__file__), 'forward-url.py')
     exclude_list = [r'youtube']
 
 def setAct(act, val):
@@ -18,16 +17,25 @@ def get_source(url, ref, opts, exclude_list):
                 return url, None, ref
     return xsrc.getSource(url, opts.format, ref)
 
+def forward_url(remote_ip, url):
+    os.system('adb connect {}'.format(remote_ip))
+    if url.startswith('https://www.youtube.com/'):
+        os.system('adb shell am start -a android.intent.action.VIEW -d {} --activity-clear-top'.format(url))
+    else:
+        os.system('adb shell am start -a android.intent.action.VIEW -t video/mp4 -d {} --activity-clear-top'.format(url))
+    return
+
 def play(url, ref, opts):
     is_video = opts.format != 'bestaudio'
     exclude_list = defvals.exclude_list if is_video else None
     url, cookies, ref = get_source(url, ref, opts, exclude_list)
     print('[dbg] url {}'.format(url))
     print('[dbg] ref {}'.format(ref))
+    print('[dbg] opts {}'.format(opts))
     if opts.out_extract:
         xurl.saveLocal(opts.out_extract, url)
     if opts.forward_url == 'yes':
-        os.system('{} {} {}'.format(defvals.forward_url, url))
+        forward_url(opts.forward_url_ip, url)
     return
 
 def isRunning():
