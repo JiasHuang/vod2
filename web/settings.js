@@ -30,7 +30,7 @@ var settings = {
     },
     'dlconf' : {
         'type' : 'input',
-        'defs' : 'zuida=4,pangzitv=4,.le.com=4,188mov=4,iqiyi=4,gimy=4'
+        'defs' : ''
     },
     'run_as_extractor' : {
         'type' : 'select',

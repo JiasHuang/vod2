@@ -2,7 +2,7 @@ import re
 
 import xurl
 
-VALID_URL = r'dramasq'
+VALID_URL = r'dramasq|qdrama|dman'
 
 def getSource(url, fmt, ref):
     txt = xurl.load(url)

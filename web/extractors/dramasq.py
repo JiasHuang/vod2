@@ -4,11 +4,11 @@ import base64
 
 from .utils import *
 
-VALID_URL = r'dramasq'
+VALID_URL = r'dramasq|qdrama|dman'
 
 def extract(url):
     objs = []
-    if url.endswith(('/jp/', '/kr/', '/cn/', '/tw/', '/th/')):
+    if url.endswith(('/jp/', '/kr/', '/cn/', '/tw/', '/th/', '/us/')):
         txt = load(url)
         for m in re.finditer(r'<a href="(.*?)">(.*?)</a>', txt, re.DOTALL | re.MULTILINE):
             if not re.search(r'\d+\w*/$', m.group(1)):
