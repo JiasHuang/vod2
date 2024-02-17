@@ -106,7 +106,7 @@ function parseJSON(obj) {
 }
 
 function onTimeout() {
-  alert('timeout');
+  //alert('timeout');
 }
 
 function updateResult() {
