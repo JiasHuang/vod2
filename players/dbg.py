@@ -18,7 +18,7 @@ def get_source(url, ref, opts, exclude_list):
     return xsrc.getSource(url, opts.format, ref)
 
 def forward_url(remote_ip, url):
-    os.system('adb connect {}'.format(remote_ip))
+    os.system('adb connect {}:5555'.format(remote_ip))
     if url.startswith('https://www.youtube.com/'):
         os.system('adb shell am start -a android.intent.action.VIEW -d {} --activity-clear-top'.format(url))
     else:
