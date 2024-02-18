@@ -3,8 +3,8 @@
 
 import os
 import re
-
-from mod_python import util, Cookie
+import cgi
+import cgitb
 
 def get_redirect_location(i):
     if i.startswith('#'):
@@ -17,19 +17,12 @@ def get_redirect_location(i):
         return 'index.html?f=' + i
     else:
         return 'search.html?q=' + i
-    print('FAILED TO GET REDIRECT LOCATION ' + i)
-    return None
 
-def index(req):
-
-    req.content_type = 'text/html; charset=utf-8'
-    form = req.form or util.FieldStorage(req)
-
-    i = form.get('i', None)
-
-    if i:
-        loc = get_redirect_location(i)
-        util.redirect(req, loc)
-
+def main():
+    args = cgi.FieldStorage()
+    loc = get_redirect_location(args.getvalue('i'))
+    print('Location: {}\n'.format(loc))
     return
 
+cgitb.enable()
+main()

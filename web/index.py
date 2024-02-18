@@ -12,15 +12,15 @@ def main():
     print('Content-type:text/html\n')
 
     args = cgi.FieldStorage()
-    func_args = ''
+    func_args = []
 
     for k in args.keys():
-        func_args = '{}={}'.format(k, args.getvalue(k))
+        func_args.append('{}={}'.format(k, args.getvalue(k)))
 
     func = os.path.basename(__file__).replace('.py', '')
     tmpf = tempfile.NamedTemporaryFile(delete=False).name
     server = os.path.join(os.path.dirname(__file__), 'server.py')
-    cmd = '%s -o %s -e \'%s\'' %(server, tmpf, func_args)
+    cmd = '%s -o %s -e \'%s\'' %(server, tmpf, '&'.join(func_args))
 
     if 'HTTP_COOKIE' in os.environ:
         cmd += ' --cookies \'%s\'' %(os.environ['HTTP_COOKIE'])
